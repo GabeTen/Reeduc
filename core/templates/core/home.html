@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home - Reeduc{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h2 class="text-primary mb-4">Bem-vindo ao Reeduc</h2>
+        <p class="mb-4">Reeducação para a Ressocialização</p>
+
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-3">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Registrar</a>
+        {% else %}
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Ir para o Painel</a>
+        {% endif %}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block title %}Atividades Pendentes - Reeduc{% endblock %}
+{% block content %}
+    <h2 class="text-warning text-center mb-4">Atividades Não Concluídas</h2>
+    <ul class="list-group">
+        {% for item in pendentes %}
+            <li class="list-group-item">
+                <strong>{{ item.activity.title }}</strong> <br>
+                <small>Curso: {{ item.activity.course.title }}</small>
+            </li>
+        {% empty %}
+            <li class="list-group-item">Você não tem atividades pendentes! 🎉</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
