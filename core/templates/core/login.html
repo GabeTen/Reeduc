@@ -1,11 +1,26 @@
 {% extends 'core/base.html' %}
 {% block title %}Login - Reeduc{% endblock %}
 {% block content %}
-    <h2 class="text-primary text-center mb-4">Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Entrar</button>
-    </form>
+    <div class="row col-sm-12 col-md-8 col-lg-6 justify-content-center align-items-center">
+            <form class="row col-sm-12 card px-4 py-4 shadow-sm gap-3">
+                <h2 class="text-primary text-center">Login</h2>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary col-sm-12">Enviar</button>   
+            </form>
+
+            <!-- <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </form> -->
+    </div>
 {% endblock %}
 
