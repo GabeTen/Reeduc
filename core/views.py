@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+
 def home(request):
     return render(request, 'core/home.html')
 
@@ -36,5 +37,4 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     return render(request, 'core/dashboard.html')
-
 

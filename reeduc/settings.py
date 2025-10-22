@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # Suas apps
     'core',
     'cursos',
+    'educacao',
 ]
 
 MIDDLEWARE = [

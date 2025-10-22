@@ -9,11 +9,11 @@
 </head>
 <body class="bg-white ">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
                 <!-- 👇 substitui o texto por imagem -->
-                <img src="{% static 'core/images/logo.jpg' %}" alt="Logo REEDUC" height="50" class="img-thumbnail">
+                <img src="{% static 'core/images/logo.jpg' %}" alt="Logo REEDUC" class="img-thumbnail" height="50" width="50">
                 <span class="fw-bold text-white">REEDUC</span>
             </a>
             <div class="collapse navbar-collapse justify-content-end">
@@ -45,10 +45,14 @@
         </div>
     </nav>
 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container d-flex justify-content-center align-items-start min-vh-100 py-5">
         {% block content %}
         {% endblock %}
     </div>
-
+    <footer class="bg-primary text-center text-lg-start mt-auto">
+        <div class="text-center p-3">
+            © 2024 Reeduc. Todos os direitos reservados.
+        </div>
+    </footer>
 </body>
 </html>
