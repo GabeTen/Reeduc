@@ -19,7 +19,14 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # 👇 inclui todas as rotas da app core
     path('', include('core.urls')),
+
+    # 👇 inclui as rotas da app educacao
+    path('educacao/', include('educacao.urls')),
+
+     # 👇 inclui as rotas da app cursos
     path('cursos/', include('cursos.urls')),
 ]
 

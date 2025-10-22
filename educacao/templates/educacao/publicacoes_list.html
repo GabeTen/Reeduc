@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row gap-5">
+    <div class="col-sm-12">
+        <h2>📚 Publicações Educacionais</h2>
+    </div>
+    <div class="col-sm-12 d-flex flex-wrap gap-4 justify-content-start offset-1">
+        {% for p in publicacoes %}
+            <div class="col-sm-12 col-md-6 col-lg-4" style="width: 300px;">
+                <div class="card">
+                    
+                    {% if p.embed_link %}
+                        <div class="ratio ratio-16x9">
+                            <iframe 
+                                src="{{ p.embed_link }}" 
+                                title="{{ p.titulo }}" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ p.titulo }}</h5>
+                        <p class="card-text text-wrap text-truncate" style="max-width: 300px;">
+                                {{ p.descricao }}
+                            </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Autor: {{ p.autor }}</li>
+                        <li class="list-group-item">Data de Publicação: {{ p.data_publicacao }}</li>
+                    </ul>
+                </div>
+            </div>
+        {% empty %}
+            <li>Nenhuma publicação encontrada.</li>
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}
