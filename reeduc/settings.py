@@ -110,11 +110,13 @@ LOGIN_URL = '/login/'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
+USE_L10N = True   # ativa formatação local (datas, números, moedas)
 
 USE_TZ = True
 
