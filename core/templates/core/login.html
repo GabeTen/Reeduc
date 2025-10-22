@@ -9,22 +9,30 @@
     <body class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-white">
         <div class="row col-sm-8 justify-content-center align-items-center">
             
-            <form class="col-sm-12 col-md-8 col-lg-6 card px-4 py-4 shadow-sm gap-3" method="post">
+            <form method="POST" class="gap-2 col-sm-12 col-md-8 col-lg-6 card px-4 py-4 shadow-sm">
                 <h2 class="text-primary text-center">Login</h2>
-
                 {% csrf_token %}
 
-                {{ form.as_p }}
-
-                <button type="submit" class="btn btn-primary">Entrar</button>
-
-                <div class="row col-sm-12 justify-content-center align-items-center">
-                    <a href="{% url 'register' %}" class="text-center">Don't have an account? Sign up here.</a>
+                <div class="d-flex flex-column gap-2">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
                 </div>
-                <div class="row col-sm-12 justify-content-center align-items-center">
-                    <a href="{% url 'home' %}" class="text-center">Go back to home</a>
+
+                <div class="d-flex flex-column gap-2">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+
+                <div class="row me-0 ms-0">
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </div>
+
+                <div class="text-center">
+                    <a href="{% url 'register' %}" class="text-primary text-decoration-none">Don't have an account? Sign up here.</a><br>
+                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">Go back to home</a>
                 </div>
             </form>
+
 
         </div>
     </body>
