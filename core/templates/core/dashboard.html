@@ -1,7 +1,9 @@
 {% extends 'core/base.html' %}
 {% block title %}Painel - Reeduc{% endblock %}
 {% block content %}
-    <h2 class="text-primary text-center mb-4">Painel do Usuário</h2>
-    <p class="text-center">Olá, {{ request.user.username }}! Bem-vindo ao seu painel.</p>
+    <div class="d-flex flex-column">        
+        <h2 class="text-primary text-center mb-4">Painel do Usuário</h2>
+        <p class="text-center">Olá, {{ request.user.username }}! Bem-vindo ao seu painel.</p>
+    </div>
 {% endblock %}
 

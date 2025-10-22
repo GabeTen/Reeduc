@@ -9,6 +9,7 @@ User = get_user_model()
 class PublicacaoEducacional(models.Model):
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
+    link = models.URLField(max_length=200, null=True, blank=True) 
     data_publicacao = models.DateTimeField(auto_now_add=True)
     
     # 🔗 Relacionamento com o usuário (1:N)
@@ -20,3 +21,10 @@ class PublicacaoEducacional(models.Model):
 
     def __str__(self):
         return f"{self.titulo} ({self.autor.username})"
+    
+    @property
+    def embed_link(self):
+        if not self.link:
+            return '' 
+        
+        return self.link.replace('watch?v=', 'embed/')

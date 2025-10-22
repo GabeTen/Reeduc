@@ -9,7 +9,18 @@
         {% for p in publicacoes %}
             <div class="col-sm-12 col-md-6 col-lg-4" style="width: 300px;">
                 <div class="card">
-                    <img src="..." class="card-img-top" alt="...">
+                    
+                    {% if p.embed_link %}
+                        <div class="ratio ratio-16x9">
+                            <iframe 
+                                src="{{ p.embed_link }}" 
+                                title="{{ p.titulo }}" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+                    
                     <div class="card-body">
                         <h5 class="card-title">{{ p.titulo }}</h5>
                         <p class="card-text text-wrap text-truncate" style="max-width: 300px;">
@@ -27,15 +38,5 @@
         {% endfor %}
     </div>
     
-
 </div>
-
-
-        </div>
-
-        
-    </div>
-</div>
-
-    
 {% endblock %}

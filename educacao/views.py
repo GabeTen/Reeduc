@@ -1,66 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PublicacaoEducacional  # importa o modelo da app educação
+from .forms import PublicacaoForm
 
+def publicacao_list(request):
+    all_publicacoes = PublicacaoEducacional.objects.all().order_by('-data_publicacao')
 
-def publicacoes_list(request):
-    # 🔹 Lista simulada de publicações (em memória)
-    publicacoes = [
-        {
-            'titulo': 'A Importância da Educação Digital',
-            'descricao': 'Um estudo sobre o impacto das tecnologias na aprendizagem moderna.',
-            'autor': 'Eugenio Lima',
-            'data_publicacao': '2025-10-20 18:00',
-        },
-        {
-            'titulo': 'Metodologias Ativas na Sala de Aula',
-            'descricao': 'Explorando o papel do aluno como protagonista no processo de ensino-aprendizagem.',
-            'autor': 'Ana Souza',
-            'data_publicacao': '2025-10-18 09:30',
-        },
-        {
-            'titulo': 'Ensino Híbrido e o Futuro da Educação',
-            'descricao': 'Como combinar o ensino presencial e remoto de forma eficiente.',
-            'autor': 'Carlos Pereira',
-            'data_publicacao': '2025-10-15 15:45',
-        },
-        {
-            'titulo': 'A Importância da Educação Digital',
-            'descricao': 'Um estudo sobre o impacto das tecnologias na aprendizagem moderna.',
-            'autor': 'Eugenio Lima',
-            'data_publicacao': '2025-10-20 18:00',
-        },
-        {
-            'titulo': 'Metodologias Ativas na Sala de Aula',
-            'descricao': 'Explorando o papel do aluno como protagonista no processo de ensino-aprendizagem.',
-            'autor': 'Ana Souza',
-            'data_publicacao': '2025-10-18 09:30',
-        },
-        {
-            'titulo': 'Ensino Híbrido e o Futuro da Educação',
-            'descricao': 'Como combinar o ensino presencial e remoto de forma eficiente.',
-            'autor': 'Carlos Pereira',
-            'data_publicacao': '2025-10-15 15:45',
-        },
-        {
-            'titulo': 'A Importância da Educação Digital',
-            'descricao': 'Um estudo sobre o impacto das tecnologias na aprendizagem moderna.',
-            'autor': 'Eugenio Lima',
-            'data_publicacao': '2025-10-20 18:00',
-        },
-        {
-            'titulo': 'Metodologias Ativas na Sala de Aula',
-            'descricao': 'Explorando o papel do aluno como protagonista no processo de ensino-aprendizagem Explorando o papel do aluno como protagonista no processo de ensino-aprendizagem.',
-            'autor': 'Ana Souza',
-            'data_publicacao': '2025-10-18 09:30',
-        },
-        {
-            'titulo': 'Ensino Híbrido e o Futuro da Educação',
-            'descricao': 'Como combinar o ensino presencial e remoto de forma eficiente.',
-            'autor': 'Carlos Pereira',
-            'data_publicacao': '2025-10-15 15:45',
-        },
-    ]
+    context = {
+        'publicacoes': all_publicacoes
+    }
+    
+    return render(request, 'educacao/publicacoes_list.html', context)
 
-    # Renderiza o template com a lista em memória
-    return render(request, 'educacao/publicacoes_list.html', {'publicacoes': publicacoes})
+@login_required 
+def create_publicacao(request):
+    if request.method == 'POST':
+        form = PublicacaoForm(request.POST) 
+        if form.is_valid():
+            publicacao = form.save(commit=False) 
+            publicacao.autor = request.user  
+            publicacao.save() 
+            
+            return redirect('dashboard') 
+    else:
+        form = PublicacaoForm() 
+    
+    return render(request, 'educacao/publicacao_form.html', {'form': form})
