@@ -1,3 +1,14 @@
 #id_descricao, #id_titulo, #id_link {
     width: 100%;
 }
+#mobileOffcanvasMenu {
+    width: 250px;
+}
+
+li.nav-item {
+    padding: 10px 15px;
+}
+
+li.nav-item:hover {
+    background-color: #0d6efd;
+}
