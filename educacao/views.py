@@ -21,7 +21,7 @@ def create_publicacao(request):
             publicacao.autor = request.user  
             publicacao.save() 
             
-            return redirect('dashboard') 
+            return redirect('publicacoes_list') 
     else:
         form = PublicacaoForm() 
     

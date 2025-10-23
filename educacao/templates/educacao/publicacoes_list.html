@@ -1,11 +1,21 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="row gap-5">
-    <div class="col-sm-12">
-        <h2>📚 Publicações Educacionais</h2>
+<div class="row gap-5 py-5">
+    <div class="d-flex justify-content-between col-sm-12">
+        <div class="d-flex gap-3">
+            <i class="bi bi-book fs-1"></i>
+            <div class="d-flex align-items-center">
+                <h2 class="m-0 fs-1"> Publicações Educacionais</h2>
+            </div>
+        </div>
+        
+        <a href="{% url 'create_publicacao' %}" class="d-flex align-itens-center gap-2 btn btn-primary">
+            <i class="bi bi-plus-lg d-flex align-items-center"></i> 
+            <span class="d-flex align-items-center">Nova Publicação</span>
+        </a>
     </div>
-    <div class="col-sm-12 d-flex flex-wrap gap-4 justify-content-start offset-1">
+    <div class="col-sm-12 d-flex flex-wrap gap-4 justify-content-start">
         {% for p in publicacoes %}
             <div class="col-sm-12 col-md-6 col-lg-4" style="width: 300px;">
                 <div class="card">
