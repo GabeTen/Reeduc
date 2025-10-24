@@ -36,6 +36,13 @@
                         <p class="card-text text-wrap text-truncate" style="max-width: 300px;">
                                 {{ p.descricao }}
                             </p>
+
+                            {% if p.autor == request.user or request.user.is_superuser %}
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'edit_publicacao' p.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                    <a href="{% url 'delete_publicacao' p.id %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                                </div>
+                            {% endif %}
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Autor: {{ p.autor }}</li>

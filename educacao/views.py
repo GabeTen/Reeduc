@@ -26,3 +26,41 @@ def create_publicacao(request):
         form = PublicacaoForm() 
     
     return render(request, 'educacao/publicacao_form.html', {'form': form})
+
+@login_required
+def edit_publicacao(request, pk):
+    publicacao = PublicacaoEducacional.objects.get(pk=pk)
+
+    # Autor ou superusuário pode editar
+    if publicacao.autor != request.user and not request.user.is_superuser:
+        return redirect('publicacoes_list')
+
+    if request.method == 'POST':
+        form = PublicacaoForm(request.POST, instance=publicacao)
+        if form.is_valid():
+            form.save()
+            return redirect('publicacoes_list')
+    else:
+        form = PublicacaoForm(instance=publicacao)
+    
+    return render(request, 'educacao/publicacao_form.html', {
+        'form': form,
+        'editar': True
+    })
+
+
+@login_required
+def delete_publicacao(request, pk):
+    publicacao = PublicacaoEducacional.objects.get(pk=pk)
+
+    # Autor ou superusuário pode excluir
+    if publicacao.autor != request.user and not request.user.is_superuser:
+        return redirect('publicacoes_list')
+
+    if request.method == 'POST':
+        publicacao.delete()
+        return redirect('publicacoes_list')
+
+    return render(request, 'educacao/publicacao_confirm_delete.html', {
+        'publicacao': publicacao
+    })
