@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PublicacaoEducacional  # importa o modelo da app educação
 from .forms import PublicacaoForm
@@ -28,8 +29,8 @@ def create_publicacao(request):
     return render(request, 'educacao/publicacao_form.html', {'form': form})
 
 @login_required
-def edit_publicacao(request, pk):
-    publicacao = PublicacaoEducacional.objects.get(pk=pk)
+def edit_publicacao(request, id):
+    publicacao = get_object_or_404(PublicacaoEducacional, id=id)
 
     # Autor ou superusuário pode editar
     if publicacao.autor != request.user and not request.user.is_superuser:
@@ -49,18 +50,13 @@ def edit_publicacao(request, pk):
     })
 
 
-@login_required
-def delete_publicacao(request, pk):
-    publicacao = PublicacaoEducacional.objects.get(pk=pk)
 
-    # Autor ou superusuário pode excluir
-    if publicacao.autor != request.user and not request.user.is_superuser:
-        return redirect('publicacoes_list')
+def delete_publicacao(request, id):
+    publicacao = get_object_or_404(PublicacaoEducacional, id=id)
 
-    if request.method == 'POST':
-        publicacao.delete()
-        return redirect('publicacoes_list')
+    # Verifica permissão
+    if request.user != publicacao.autor and not request.user.is_superuser:
+        return JsonResponse({'error': 'Sem permissão para excluir.'}, status=403)
 
-    return render(request, 'educacao/publicacao_confirm_delete.html', {
-        'publicacao': publicacao
-    })
+    publicacao.delete()
+    return JsonResponse({'message': 'Publicação excluída com sucesso!', 'id': id})
