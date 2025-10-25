@@ -16,15 +16,15 @@ def publicacao_list(request):
 @login_required 
 def create_publicacao(request):
     if request.method == 'POST':
-        form = PublicacaoForm(request.POST) 
+        form = PublicacaoForm(request.POST) #popula o formulário com os dados submetidos 
         if form.is_valid():
             publicacao = form.save(commit=False) 
-            publicacao.autor = request.user  
+            publicacao.autor = request.user 
             publicacao.save() 
             
             return redirect('publicacoes_list') 
     else:
-        form = PublicacaoForm() 
+        form = PublicacaoForm()  #retorna um formulário vazio
     
     return render(request, 'educacao/publicacao_form.html', {'form': form})
 
