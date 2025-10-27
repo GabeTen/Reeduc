@@ -132,6 +132,13 @@
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     
+    <script>
+        // Inicializa tooltips do Bootstrap
+        $(document).ready(function() {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
     {% block scripts %}{% endblock %}   
 
     <script>

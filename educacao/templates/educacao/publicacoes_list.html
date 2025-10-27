@@ -33,8 +33,8 @@
                     {% endif %}
                     
                     <div class="card-body">
-                        <h5 class="card-title text-truncate" style="max-height: 50px;">{{ p.titulo }}</h5>
-                        <p class="card-text text-wrap text-truncate" style="max-height: 100px">
+                        <h5 data-bs-toggle="tooltip" data-bs-title="{{ p.titulo }}" class="card-title text-truncate" style="max-height: 50px;">{{ p.titulo }}</h5>
+                        <p data-bs-toggle="tooltip" data-bs-title="{{ p.descricao }}" class="card-text text-wrap text-truncate" style="max-height: 100px">
                             {{ p.descricao }}
                         </p>
 
