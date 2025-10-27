@@ -6,18 +6,19 @@
         <div class="d-flex gap-3">
             <i class="bi bi-book fs-1"></i>
             <div class="d-flex align-items-center">
-                <h2 class="m-0 fs-1"> Publicações Educacionais</h2>
+                <h2 class="m-0 fs-3"> Publicações Educacionais</h2>
             </div>
         </div>
         
         <a href="{% url 'create_publicacao' %}" class="d-flex align-itens-center gap-2 btn-sm btn btn-primary">
-            <i class="bi bi-plus-lg d-flex align-items-center"></i> 
             <span class="d-flex align-items-center">Publicação</span>
+            <i class="bi bi-plus-lg d-flex align-items-center fs-5"></i> 
+
         </a>
     </div>
-    <div class="col-sm-12 d-flex flex-wrap gap-4 justify-content-start">
+    <div id="card-container" class="col-sm-12 d-flex flex-wrap gap-4 d-flex justify-content-center justify-content-xl-start py-5" >
         {% for p in publicacoes %}
-            <div class="col-sm-12 col-md-6 col-lg-4" style="width: 300px;">
+            <div class="col-sm-12 col-md-6 col-lg-4" style="max-width: 300px;">
                 <div class="card" data-id="{{ p.id }}">
                     
                     {% if p.link %}
@@ -32,10 +33,10 @@
                     {% endif %}
                     
                     <div class="card-body">
-                        <h5 class="card-title">{{ p.titulo }}</h5>
-                        <p class="card-text text-wrap text-truncate" style="max-width: 300px;">
-                                {{ p.descricao }}
-                            </p>
+                        <h5 class="card-title text-truncate" style="max-height: 50px;">{{ p.titulo }}</h5>
+                        <p class="card-text text-wrap text-truncate" style="max-height: 100px">
+                            {{ p.descricao }}
+                        </p>
 
                             {% if p.autor == request.user or request.user.is_superuser %}
                                 <div class="d-flex gap-2">
@@ -49,11 +50,39 @@
                         <li class="list-group-item">Data de Publicação: {{ p.data_publicacao }}</li>
                     </ul>
                 </div>
+                
             </div>
         {% empty %}
             <li>Nenhuma publicação encontrada.</li>
         {% endfor %}
     </div>
+    <nav aria-label="Navegação de páginas d-block">
+            <ul class="pagination justify-content-center">
+
+                {% if publicacoes.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ publicacoes.previous_page_number }}">Anterior</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+
+                {% for num in publicacoes.paginator.page_range %}
+                <li class="page-item {% if publicacoes.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if publicacoes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ publicacoes.next_page_number }}">Próxima</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Próxima</span></li>
+                {% endif %}
+
+            </ul>   
+    </nav>
 
     <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -87,55 +116,58 @@
 
 
 {% block scripts %}
-<script>
-$(document).ready(function () {
-    let publicacaoId = null;
-    const modal = $('#modalConfirmarExclusao');
-    const tituloElement = $('#tituloPublicacao');
-    const form = $('#formExcluir');
-    const csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
-    modal.on('show.bs.modal', function (event) {
-        const button = $(event.relatedTarget);
-        publicacaoId = button.data('id');
-        const titulo = button.data('titulo');
-        tituloElement.text(titulo);
-    });
 
-    form.on('submit', function (e) {
-        e.preventDefault();
-        if (!publicacaoId) return;
 
-        $.ajax({
-            url: `/educacao/publicacoes/${publicacaoId}/delete/`,
-            method: 'POST',
-            headers: { 'X-CSRFToken': csrftoken },
-            success: function (data) {
-                console.log("Data recebida:", data);
-                const modalInstance = bootstrap.Modal.getInstance(modal[0]);
-                modalInstance.hide();
+    <script>
+        $(document).ready(function () {
+            let publicacaoId = null;
+            const modal = $('#modalConfirmarExclusao');
+            const tituloElement = $('#tituloPublicacao');
+            const form = $('#formExcluir');
+            const csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
-                if (data.error) {
-                    toastr.error(data.error, "🚫 Erro");
-                    return;
-                }
+            modal.on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                publicacaoId = button.data('id');
+                const titulo = button.data('titulo');
+                tituloElement.text(titulo);
+            });
 
-                // 🔥 Remove a COL inteira (não apenas o card)
-                const col = $(`[data-id="${publicacaoId}"]`).closest('.col-sm-12, .col-md-6, .col-lg-4');
-                col.fadeOut(400, function() {
-                    $(this).remove();
+            form.on('submit', function (e) {
+                e.preventDefault();
+                if (!publicacaoId) return;
+
+                $.ajax({
+                    url: `/educacao/publicacoes/${publicacaoId}/delete/`,
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken },
+                    success: function (data) {
+                        console.log("Data recebida:", data);
+                        const modalInstance = bootstrap.Modal.getInstance(modal[0]);
+                        modalInstance.hide();
+
+                        if (data.error) {
+                            toastr.error(data.error, "🚫 Erro");
+                            return;
+                        }
+
+                        // 🔥 Remove a COL inteira (não apenas o card)
+                        const col = $(`[data-id="${publicacaoId}"]`).closest('.col-sm-12, .col-md-6, .col-lg-4');
+                        col.fadeOut(400, function() {
+                            $(this).remove();
+                        });
+
+                        toastr.success(data.message, "✅ Sucesso");
+                    },
+                    error: function () {
+                        toastr.error("Erro ao excluir publicação.", "⚠️ Erro inesperado");
+                    }
                 });
-
-                toastr.success(data.message, "✅ Sucesso");
-            },
-            error: function () {
-                toastr.error("Erro ao excluir publicação.", "⚠️ Erro inesperado");
-            }
+            });
         });
-    });
-});
 
-</script>
+    </script>
 
 {% endblock %}
 

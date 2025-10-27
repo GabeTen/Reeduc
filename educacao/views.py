@@ -3,15 +3,28 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PublicacaoEducacional  # importa o modelo da app educação
 from .forms import PublicacaoForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def publicacao_list(request):
     all_publicacoes = PublicacaoEducacional.objects.all().order_by('-data_publicacao')
 
+    # Paginação
+    paginator = Paginator(all_publicacoes, 8)  # 10 publicações por página
+    page = request.GET.get('page')
+
+    try:
+        publicacoes = paginator.page(page)
+    except PageNotAnInteger:
+        publicacoes = paginator.page(1)
+    except EmptyPage:
+        publicacoes = paginator.page(paginator.num_pages)
+
     context = {
-        'publicacoes': all_publicacoes
+        'publicacoes': publicacoes,
     }
-    
+
     return render(request, 'educacao/publicacoes_list.html', context)
+
 
 @login_required 
 def create_publicacao(request):
