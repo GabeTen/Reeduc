@@ -1,18 +1,48 @@
 {% extends 'core/base.html' %}
 {% block title %}Cursos - Reeduc{% endblock %}
+
 {% block content %}
-    <div class="d-flex flex-column">
-        <h2 class="text-primary text-center mb-4">Cursos Disponíveis</h2>
-    <ul class="list-group">
+<div class="row gap-5 py-5">
+    
+    <div class="d-flex justify-content-between col-sm-12">
+        <div class="d-flex gap-3">
+            <i class="bi bi-book fs-1"></i>
+            <div class="d-flex align-items-center">
+                <h2 class="m-0 fs-3"> Cursos Disponíveis</h2>
+            </div>
+        </div>
+        
+        <a href="{% url 'create_curso' %}" class="d-flex align-items-center gap-2 btn-sm btn btn-primary">
+            <span class="d-flex align-items-center">Novo Curso</span>
+            <i class="bi bi-plus-lg d-flex align-items-center fs-5"></i> 
+        </a>
+    </div>
+
+    <div id="card-container" class="col-sm-12 d-flex flex-wrap gap-4 d-flex justify-content-center justify-content-xl-start py-5" >
+        
         {% for course in courses %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ course.title }}
-                <a href="{% url 'course_detail' course.id %}" class="btn btn-sm btn-primary">Ver Atividades</a>
-            </li>
+            <div class="col-sm-12 col-md-6 col-lg-4" style="max-width: 300px;">
+                <div class="card" data-id="{{ course.id }}">
+                    
+                    <div class="card-body">
+                        <h5 data-bs-toggle="tooltip" data-bs-title="{{ course.title }}" class="card-title text-truncate" style="max-height: 50px;">
+                            {{ course.title }}
+                        </h5>
+                        <p data-bs-toggle="tooltip" data-bs-title="{{ course.description }}" class="card-text text-wrap text-truncate" style="max-height: 100px">
+                            {{ course.description }}
+                        </p>
+
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-sm btn-primary">Ver Atividades</a>
+                    </div>
+                    
+                    </div>
+            </div>
         {% empty %}
-            <li class="list-group-item">Nenhum curso cadastrado ainda.</li>
+            <div class="col-12">
+                <p class="text-center fs-5 text-muted">Nenhum curso cadastrado ainda.</p>
+            </div>
         {% endfor %}
-    </ul>
     </div>
     
+    </div>
 {% endblock %}

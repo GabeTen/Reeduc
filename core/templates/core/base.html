@@ -12,7 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>
-        // This script blocks rendering to apply the theme immediately.
         (() => {
             const THEME_KEY = 'theme';
             const HTML_ELEMENT = document.documentElement;
@@ -22,11 +21,9 @@
                 if (savedTheme) {
                     return savedTheme;
                 }
-                // Check system preference
                 return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             };
             
-            // Set the theme on the <html> tag BEFORE the page renders
             HTML_ELEMENT.setAttribute('data-bs-theme', getPreferredTheme());
         })();
     </script>
@@ -197,7 +194,6 @@
             const HTML_ELEMENT = document.documentElement;
 
             /**
-             * Updates all toggle icons on the page to match the current theme.
              * @param {string} theme - 'light' or 'dark'
              */
             const updateIcons = (theme) => {

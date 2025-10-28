@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Course, Activity, UserActivity
 from django.contrib.auth.decorators import login_required
+from .forms import CursoForm
+from django.shortcuts import get_object_or_404, render, redirect
+
 
 @login_required
 def course_list(request):
@@ -25,3 +28,18 @@ def pending_activities(request):
     pendentes = UserActivity.objects.filter(user=request.user, completed=False)
     return render(request, 'cursos/pending_activities.html', {'pendentes': pendentes})
 
+
+
+@login_required 
+def create_curso(request):
+    if request.method == 'POST':
+        form = CursoForm(request.POST)
+        if form.is_valid():
+            curso = form.save(commit=False) 
+            curso.save()
+            
+            return redirect('course_list') 
+    else:
+        form = CursoForm()
+    
+    return render(request, 'cursos/course_form.html', {'form': form})
