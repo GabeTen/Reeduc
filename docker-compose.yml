@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   postgres:
     container_name: postgres_container
@@ -31,13 +33,14 @@ services:
     restart: unless-stopped
 
   web:
-    build: .
     container_name: django_container
-    command: python manage.py runserver 0.0.0.0:8000
+    image: python:3.12
+    working_dir: /app
+    command: sh -c "pip install --no-cache-dir django psycopg2-binary && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "9000:8000"
     depends_on:
       - postgres
     environment:
