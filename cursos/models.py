@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from enum import Enum
 
 class CourseStatus(models.TextChoices):
-    ATIVO = 'A', 'Ativo'
-    PENDENTE = 'P', 'Pendente'
-    INATIVO = 'I', 'Inativo'
+    ATIVO = 'Ativo', 'Ativo'
+    PENDENTE = 'Pendente', 'Pendente'
+    INATIVO = 'Inativo', 'Inativo'
 
 
 class Course(models.Model):
@@ -25,7 +25,7 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         related_name='cursos'
     )
-    
+
     def __str__(self):
         return self.title
 
