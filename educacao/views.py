@@ -62,6 +62,36 @@ def edit_publicacao(request, id):
         'editar': True
     })
 
+@login_required 
+def filter_publicacoes(request):
+    title = request.GET.get('title', '')
+    description = request.GET.get('description', '')
+
+    publicacoes_list = PublicacaoEducacional.objects.all().order_by('-data_publicacao')
+
+    if title:
+        publicacoes_list = publicacoes_list.filter(titulo__icontains=title)
+    if description:
+        publicacoes_list = publicacoes_list.filter(descricao__icontains=description)
+
+    # --- Re-apply pagination to the filtered results ---
+    paginator = Paginator(publicacoes_list, 8)  # 8 per page, just like your main view
+    page = request.GET.get('page')
+
+    try:
+        publicacoes = paginator.page(page)
+    except PageNotAnInteger:
+        publicacoes = paginator.page(1)
+    except EmptyPage:
+        publicacoes = paginator.page(paginator.num_pages)
+
+    context = {
+        'publicacoes': publicacoes,
+    }
+
+    # 🔹 Retorna O NOVO PARTIAL que contém os cards E a paginação
+    return render(request, 'educacao/partials/publicacoes_partial.html', context)
+
 
 
 def delete_publicacao(request, id):

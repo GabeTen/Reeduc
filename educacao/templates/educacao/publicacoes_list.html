@@ -10,79 +10,34 @@
             </div>
         </div>
         
-        <a href="{% url 'create_publicacao' %}" class="d-flex align-itens-center gap-2 btn-sm btn btn-primary">
-            <span class="d-flex align-items-center">Publicação</span>
+        <a href="{% url 'create_publicacao' %}" class="d-flex align-items-center gap-2 btn-sm btn btn-primary">
+            <span class="d-flex align-items-center">Nova Publicação</span>
             <i class="bi bi-plus-lg d-flex align-items-center fs-5"></i> 
-
         </a>
     </div>
-    <div id="card-container" class="col-sm-12 d-flex flex-wrap gap-4 d-flex justify-content-center justify-content-xl-start py-5" >
-        {% for p in publicacoes %}
-            <div class="col-sm-12 col-md-6 col-lg-4" style="max-width: 300px;">
-                <div class="card" data-id="{{ p.id }}">
-                    
-                    {% if p.link %}
-                        <div class="ratio ratio-16x9">
-                            <iframe 
-                                src="{{ p.embed_link }}" 
-                                title="{{ p.titulo }}" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="card-body">
-                        <h5 data-bs-toggle="tooltip" data-bs-title="{{ p.titulo }}" class="card-title text-truncate" style="max-height: 50px;">{{ p.titulo }}</h5>
-                        <p data-bs-toggle="tooltip" data-bs-title="{{ p.descricao }}" class="card-text text-wrap text-truncate" style="max-height: 100px">
-                            {{ p.descricao }}
-                        </p>
 
-                            {% if p.autor == request.user or request.user.is_superuser %}
-                                <div class="d-flex gap-2">
-                                    <a href="{% url 'edit_publicacao' p.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
-                                    <a class="btn btn-sm btn-outline-danger btn-delete" data-titulo="{{ p.titulo }}" data-id="{{ p.id }}" data-bs-toggle="modal" data-bs-target="#modalConfirmarExclusao">Excluir</a>
-                                </div>
-                            {% endif %}
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Autor: {{ p.autor }}</li>
-                        <li class="list-group-item">Data de Publicação: {{ p.data_publicacao }}</li>
-                    </ul>
-                </div>
-                
+    <div class="col-sm-12">
+        <div class="row g-3">
+            <div class="col-sm-12 col-md-6">
+                <label for="publicacaoTitle" class="form-label">Título da Publicação</label>
+                <input type="text" class="form-control" id="publicacaoTitle" placeholder="Título">
             </div>
-        {% empty %}
-            <div class="text-center fs-5 text-muted">Nenhuma publicação cadastrada ainda.</div>
-        {% endfor %}
+
+            <div class="col-sm-12 col-md-6">
+                <label for="publicacaoDescription" class="form-label">Descrição</label>
+                <input class="form-control" id="publicacaoDescription" placeholder="Descrição">
+            </div>
+
+            <div class="col-sm-12 d-flex justify-content-end gap-2 mt-3">
+                <button id="clearFiltersPublicacoes" class="btn btn-outline-secondary">Limpar Filtros</button>
+                <button id="filterPublicacoes" class="btn btn-primary">Filtrar Publicações</button>
+            </div>
+        </div>
     </div>
-    <nav aria-label="Navegação de páginas d-block">
-            <ul class="pagination justify-content-center">
-
-                {% if publicacoes.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ publicacoes.previous_page_number }}">Anterior</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-                {% endif %}
-
-                {% for num in publicacoes.paginator.page_range %}
-                <li class="page-item {% if publicacoes.number == num %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                </li>
-                {% endfor %}
-
-                {% if publicacoes.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ publicacoes.next_page_number }}">Próxima</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">Próxima</span></li>
-                {% endif %}
-
-            </ul>   
-    </nav>
+    
+    <div id="publicacoes-content-wrapper">
+        {% include 'educacao/partials/publicacoes_partial.html' %}
+    </div>
 
     <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -109,31 +64,56 @@
             </div>
         </div>
     </div>
-
-
 </div>
 {% endblock %}
 
 
 {% block scripts %}
-
-
-
     <script>
         $(document).ready(function () {
+            
+            $('#filterPublicacoes').on('click', function () {
+                const title = $('#publicacaoTitle').val();
+                const description = $('#publicacaoDescription').val();
+    
+                $.ajax({
+                    url: "{% url 'filter_publicacoes' %}",
+                    method: 'GET',
+                    data: {
+                        title: title,
+                        description: description
+                    },
+                    beforeSend: function () {
+                        $('#publicacoes-content-wrapper').html('<p class="text-muted text-center">Carregando...</p>');
+                    },
+                    success: function (response) {
+                        $('#publicacoes-content-wrapper').html(response);
+                    },
+                    error: function () {
+                        $('#publicacoes-content-wrapper').html('<p class="text-danger text-center">Erro ao filtrar publicações.</p>');
+                    }
+                });
+            });
+    
+            $('#clearFiltersPublicacoes').on('click', function () {
+                $('#publicacaoTitle').val('');
+                $('#publicacaoDescription').val('');
+                $('#filterPublicacoes').click();
+            });
+
             let publicacaoId = null;
             const modal = $('#modalConfirmarExclusao');
             const tituloElement = $('#tituloPublicacao');
             const form = $('#formExcluir');
             const csrftoken = $('[name=csrfmiddlewaretoken]').val();
-
+    
             modal.on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget);
                 publicacaoId = button.data('id');
                 const titulo = button.data('titulo');
                 tituloElement.text(titulo);
             });
-
+    
             form.on('submit', function (e) {
                 e.preventDefault();
                 if (!publicacaoId) return;
@@ -152,7 +132,6 @@
                             return;
                         }
 
-                        // 🔥 Remove a COL inteira (não apenas o card)
                         const col = $(`[data-id="${publicacaoId}"]`).closest('.col-sm-12, .col-md-6, .col-lg-4');
                         col.fadeOut(400, function() {
                             $(this).remove();
@@ -166,8 +145,5 @@
                 });
             });
         });
-
     </script>
-
 {% endblock %}
-
