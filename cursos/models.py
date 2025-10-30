@@ -1,9 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from enum import Enum
+
+class CourseStatus(models.TextChoices):
+    ATIVO = 'A', 'Ativo'
+    PENDENTE = 'P', 'Pendente'
+    INATIVO = 'I', 'Inativo'
+
+
 class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
+    status = models.CharField(
+        max_length=20,
+        choices=CourseStatus.choices,
+        default=CourseStatus.PENDENTE
+    )
 
     def __str__(self):
         return self.title
