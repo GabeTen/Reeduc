@@ -63,11 +63,14 @@
                         <p data-bs-toggle="tooltip" data-bs-title="{{ course.description }}" class="card-text text-wrap text-truncate" style="max-height: 100px">
                             {{ course.description }}
                         </p>
-
                         <a href="{% url 'course_detail' course.id %}" class="btn btn-sm btn-primary">Ver Atividades</a>
                     </div>
-                    
-                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Autor: {{ course.autor }}</li>
+                        <li class="list-group-item">Data de Publicação: {{ course.data_publicacao }}</li>
+                        <li class="list-group-item">Status: {{ course.get_status_display }}</li>
+                    </ul>
+                </div>
             </div>
         {% empty %}
             <div class="col-12">
