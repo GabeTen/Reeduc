@@ -53,6 +53,7 @@ def create_curso(request):
         form = CursoForm(request.POST)
         if form.is_valid():
             curso = form.save(commit=False) 
+            curso.autor = request.user  # ✅ atribui o usuário logado
             curso.save()
             
             return redirect('course_list') 
