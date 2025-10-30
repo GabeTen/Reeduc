@@ -28,6 +28,23 @@ def pending_activities(request):
     pendentes = UserActivity.objects.filter(user=request.user, completed=False)
     return render(request, 'cursos/pending_activities.html', {'pendentes': pendentes})
 
+@login_required
+def filter_cursos(request):
+    title = request.GET.get('title', '')
+    description = request.GET.get('description', '')
+    status = request.GET.get('status', '')
+
+    courses = Course.objects.all()
+
+    if title:
+        courses = courses.filter(title__icontains=title)
+    if description:
+        courses = courses.filter(description__icontains=description)
+    if status and status != 'Selecione o status.':
+        courses = courses.filter(status=status)
+
+    # 🔹 Retorna apenas o HTML dos cards (partial)
+    return render(request, 'cursos/partials/cursos_cards.html', {'courses': courses})
 
 
 @login_required 
