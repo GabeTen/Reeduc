@@ -53,3 +53,26 @@
     </div>
 </div>
 {% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(function() {
+            $('#id_publicacoes').select2({
+                placeholder: "Selecione publicações educacionais",
+                allowClear: true,
+                width: '100%',
+                ajax: {
+                    url: '/educacao/publicacoes/json/',  // 🔹 endpoint JSON
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (data) {
+                        return { results: data.results };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

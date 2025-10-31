@@ -1,8 +1,8 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
 from django.contrib.auth import get_user_model
+
+from cursos.models import Course
 
 User = get_user_model()
 
@@ -12,7 +12,16 @@ class PublicacaoEducacional(models.Model):
     link = models.URLField(max_length=300, null=True, blank=True)
     embed_link = models.URLField(max_length=300, null=True, blank=True, editable=False)
     data_publicacao = models.DateTimeField(auto_now_add=True)
-    
+
+    # 🔗 Relacionamento com o curso (1:N)
+    curso = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='publicacoes',
+        null=True,  # ✅ permite valores nulos
+        blank=True  # ✅ permite campo vazio no formulário
+    )
+
     # 🔗 Relacionamento com o usuário (1:N)
     autor = models.ForeignKey(
         User,

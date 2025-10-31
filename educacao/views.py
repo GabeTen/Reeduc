@@ -94,6 +94,7 @@ def filter_publicacoes(request):
 
 
 
+@login_required
 def delete_publicacao(request, id):
     publicacao = get_object_or_404(PublicacaoEducacional, id=id)
 
@@ -103,3 +104,16 @@ def delete_publicacao(request, id):
 
     publicacao.delete()
     return JsonResponse({'message': 'Publicação excluída com sucesso!', 'id': id})
+
+
+@login_required
+def listar_publicacoes(request):
+    # Filtra conforme necessário (ex: apenas sem curso)
+    publicacoes = PublicacaoEducacional.objects.filter(curso__isnull=True)
+
+    data = [
+        {'id': p.id, 'text': p.titulo}
+        for p in publicacoes
+    ]
+    return JsonResponse({'results': data})
+
