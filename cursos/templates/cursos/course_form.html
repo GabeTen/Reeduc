@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row gap-5 py-5 justify-content-center">
-    <div class="col-md-8 col-lg-6">
+    <div class="col-md-8 col-lg-10">
         
         <div class="d-flex gap-3 mb-4">
             <i class="bi bi-book fs-1"></i>
@@ -59,6 +59,7 @@
     <script>
         $(function() {
             $('#id_publicacoes').select2({
+                theme: 'bootstrap-5',
                 placeholder: "Selecione publicações educacionais",
                 allowClear: true,
                 width: '100%',
