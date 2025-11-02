@@ -1,70 +1,79 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="row gap-5 py-5 justify-content-center">
-    <div class="col-md-8 col-lg-10">
-        
-        <div class="d-flex gap-3 mb-4">
-            <i class="bi bi-book fs-1"></i>
-            <div class="d-flex align-items-center">
-                {% if form.instance.id %}
-                    <h2 class="m-0 fs-3">Editar Curso</h2>
-                {% else %}
-                    <h2 class="m-0 fs-3">Criar Novo Curso</h2>
-                {% endif %}
-            </div>
-        </div>
-        
-        <form method="POST" novalidate>
-            {% csrf_token %}
-            
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
+<div class="row col-sm-12 mx-1">
 
-            {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <div class="form-text">{{ field.help_text }}</div>
-                {% endif %}
-                {% for error in field.errors %}
-                    <div class="invalid-feedback d-block">{{ error }}</div>
-                {% endfor %}
-            </div>
-            {% endfor %}
-
-            <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
-                    <i class="bi bi-check-lg"></i> 
-                    Salvar Curso
-                </button>
-                <a href="{% url 'course_list' %}" class="btn btn-outline-secondary">
-                    Cancelar
-                </a>
-            </div>
-        </form>
-        
+  
+    <div class="col-sm-12 mb-3 p-0">
+        <a href="{% url 'course_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para lista de cursos
+        </a>
     </div>
+
+
+    <form id="formCriarCurso" class="card shadow-sm d-flex flex-column gap-3 col-sm-12 p-4">
+        <h1 class="text-primary text-center fw-semibold mb-3">Criar novo curso</h1>
+
+        {% csrf_token %}
+
+        <div class="col-sm-12">
+            <label for="titulo" class="form-label">Título do Curso</label>
+            <input type="text" id="titulo" name="titulo" class="form-control">
+        </div>
+
+        <div class="col-sm-12">
+            <label for="descricao" class="form-label">Descrição do Curso</label>
+            <textarea id="descricao" name="descricao" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="col-sm-12">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select">
+            <option value="Pendente">Pendente</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+            </select>
+        </div>
+
+        <div class="col-sm-12">
+            <label for="id_publicacoes" class="form-label">Publicações Educacionais</label>
+            <select class="form-select" id="id_publicacoes" data-placeholder="Selecione publicações educacionais" multiple>
+                <option></option>
+            </select>
+        </div>     
+
+        <button type="submit" class="btn btn-primary col-sm-12 ">Salvar Curso</button>
+    </form>
+    
+    
+
 </div>
 {% endblock %}
 
 
 {% block scripts %}
+
+    <script>
+        $(function() {
+
+           
+        });
+        
+    </script>
+
+    <!-- Recuperar as publicacoes educacionais e popular o dropdown na renderizacao da pagina -->
     <script>
         $(function() {
             $('#id_publicacoes').select2({
                 theme: 'bootstrap-5',
-                placeholder: "Selecione publicações educacionais",
+                placeholder: $( this ).data( 'placeholder' ),
+                closeOnSelect: false,
                 allowClear: true,
-                width: '100%',
+                language: "pt-BR",
+                dropdownCssClass: "select2--small",  
                 ajax: {
-                    url: '/educacao/publicacoes/json/',  // 🔹 endpoint JSON
+                    url: "{% url 'filter_publicacoes_by_select2' %}",  // endpoint JSON
                     dataType: 'json',
                     delay: 250,
                     processResults: function (data) {
@@ -73,6 +82,50 @@
                     cache: true
                 }
             });
+        });
+
+
+        $(document).on('submit', '#formCriarCurso', function(e) {
+            e.preventDefault();
+
+            titulo = $('#titulo').val();
+            descricao = $('#descricao').val();
+            status = $('#status').val();
+            publicacoes = $('#id_publicacoes').val();
+            const csrftoken = $('[name=csrfmiddlewaretoken]').val();
+
+
+            $.ajax({
+                url: '/cursos/novo/',
+                method: 'POST',
+                traditional: true,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', 
+                    'X-CSRFToken': csrftoken 
+                },
+                data: {
+                    titulo: titulo,
+                    descricao: descricao,
+                    status: status,
+                    publicacao: publicacoes
+                },
+                success: function(response) {
+                    console.log(response)
+                    // for success - green box
+                    toastr.success(response.mensagem);
+                    setTimeout(() => {
+                        window.location.href = '/cursos/';  // URL da listagem
+                    },1000)
+                },
+                error: function(xhr) {
+                    toastr.success(response.mensagem);
+                    console.error('Erro ao salvar:', xhr.responseText);
+                }
+            });
+            
+            console.log(publicacoes)
+            console.log(`O titulo é ${titulo} , a descricao é ${descricao} e ${status}.`);
+
         });
     </script>
 {% endblock %}

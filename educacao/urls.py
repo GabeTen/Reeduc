@@ -8,5 +8,5 @@ urlpatterns = [
     path('publicacoes/<int:id>/edit/', views.edit_publicacao, name='edit_publicacao'),
     path('publicacoes/<int:id>/delete/', views.delete_publicacao, name='delete_publicacao'),
     path('publicacoes/filter/', views.filter_publicacoes, name='filter_publicacoes'),
-    path('publicacoes/json/', views.listar_publicacoes, name='listar_publicacoes')
+    path('publicacoes/filter_by_select2/json/', views.filter_publicacoes_by_select2, name='filter_publicacoes_by_select2')
 ]

@@ -12,3 +12,20 @@ li.nav-item {
 li.nav-item:hover {
     background-color: #0d6efd;
 }
+
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-selection__rendered {
+    overflow-y: scroll !important;
+    text-overflow: ellipsis !important;
+    max-height: 100px !important;
+} 
+
+button.select2-selection__clear {
+    right: 1.75rem !important;
+    padding: 1rem !important;
+    background-color: #d1d1d1 !important;
+}

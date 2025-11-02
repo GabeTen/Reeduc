@@ -10,8 +10,8 @@ class CourseStatus(models.TextChoices):
 
 
 class Course(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField()
     data_publicacao = models.DateField(auto_now_add=True)
     status = models.CharField(
         max_length=20,

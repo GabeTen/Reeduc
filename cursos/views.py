@@ -46,19 +46,27 @@ def filter_cursos(request):
 
 @login_required
 def create_curso(request):
+    publicacoesDb = PublicacaoEducacional.objects.filter(curso__isnull=True)
+
     if request.method == 'POST':
+
         form = CursoForm(request.POST)
         if form.is_valid():
             curso = form.save(commit=False)
             curso.autor = request.user
             curso.save()
 
-            # ✅ Atualiza as publicações selecionadas
-            publicacoes = form.cleaned_data.get('publicacoes')
-            if publicacoes:
-                publicacoes.update(curso=curso)  # vincula todas ao novo curso
+            #Associando o curso às Publicacoes Educacionais
+            publicacoes = request.POST.getlist('publicacao')  # ← lista de valores
 
-            return redirect('course_list')
+
+            for pub_id in publicacoes:
+                pub = publicacoesDb.get(id=pub_id)
+                pub.curso = curso
+                pub.save()
+
+            return JsonResponse({'mensagem': 'Curso criado com sucesso!'})
+
     else:
         form = CursoForm()
 

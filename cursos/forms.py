@@ -13,9 +13,5 @@ class CursoForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ['title', 'description', 'status', 'publicacoes']  # ✅ adicionamos publicacoes
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'status': forms.Select(attrs={'class': 'select2'}),
-        }
+        fields = ['titulo', 'descricao', 'status', 'publicacoes']  # ✅ adicionamos publicacoes
+  

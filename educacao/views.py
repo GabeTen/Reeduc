@@ -107,9 +107,14 @@ def delete_publicacao(request, id):
 
 
 @login_required
-def listar_publicacoes(request):
+def filter_publicacoes_by_select2(request):
+
+    termoDeBusca = request.GET.get('q', '')
+
     # Filtra conforme necessário (ex: apenas sem curso)
-    publicacoes = PublicacaoEducacional.objects.filter(curso__isnull=True)
+    publicacoesSemCursoDb = PublicacaoEducacional.objects.filter(curso__isnull=True)
+    # Recuperando
+    publicacoes = publicacoesSemCursoDb.filter(titulo__icontains=termoDeBusca)
 
     data = [
         {'id': p.id, 'text': p.titulo}

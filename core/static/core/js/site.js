@@ -84,7 +84,7 @@ $('[data-bs-toggle="tooltip"]').tooltip();
         "debug": false,
         "newestOnTop": true,
         "progressBar": true,
-        "positionClass": "toast-top-center",
+        "positionClass": "toast-top-right",
         "preventDuplicates": true,
         "showDuration": "300",
         "hideDuration": "500",
@@ -95,3 +95,5 @@ $('[data-bs-toggle="tooltip"]').tooltip();
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     };
+
+
