@@ -81,14 +81,16 @@ WSGI_APPLICATION = 'reeduc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
+        'NAME': os.getenv('DATABASE_NAME', 'reeduc_db'),
+        'USER': os.getenv('DATABASE_USER', 'reeduc_user'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+        'HOST': os.getenv('DATABASE_HOST', ''),  # Exemplo: dpg-xxxxxx-a.oregon-postgres.render.com
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
 }
 
+# (Opcional) Verificação no log para depuração inicial
+print(f"[DEBUG] DATABASE_HOST = {os.getenv('DATABASE_HOST')}")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -130,7 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/' # onde está a pasta com as imagens
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / "core" / "static",  # onde está a pasta com as imagens
 ]
