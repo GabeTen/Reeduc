@@ -2,15 +2,63 @@
 {% block title %}Nova Publicação{% endblock %}
 
 {% block content %}
-<div class="row col-sm-8 justify-content-center align-items-center">
-    <form class.="col-sm-12 col-md-8 col-lg-6 card px-4 py-4 shadow-sm gap-3" method="post">
-        <h2 class="text-primary text-center">Criar Nova Publicação</h2>
+<div class="row gap-5 justify-content-center align-items-center py-5">
+
+  
+    <div class="d-flex justify-content-start">
+        <a href="{% url 'publicacoes_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para lista de publicações
+        </a>
+    </div>
+
+    <div class="card shadow-sm col-sm-8 col-md-8 align-items-center">
+
+        <div class="card-body col-sm-12 col-md-10 py-5">
+
+
         
-        {% csrf_token %}
+            <h1 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Criar Nova Publicação</h2>
+
+            <form method="POST" class="gap-4 col-sm-12">
+            
+                {% csrf_token %}
+
+                <div class="d-flex flex-column gap-2 p-0">
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.titulo.label_tag }} 
+                        <small class="text-muted">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.titulo }}
+                    </div>
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.link.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.link }}
+                    </div>
+                    
+                </div>
+                
+                <div class="d-flex flex-column gap-2 p-0">
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.descricao.label_tag }}
+                        <small class="text-muted">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.descricao }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Enviar</button>
         
-        {{ form.as_p }}
-        
-        <button type="submit" class="btn btn-primary">Salvar</button>
-    </form>
+            </form>
+        </div>    
+    </div>
+    
+
 </div>
 {% endblock %}
