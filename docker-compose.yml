@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:16
+    environment:
+      POSTGRES_USER: reeduc_user
+      POSTGRES_PASSWORD: 123456789
+      PGDATA: /data/postgres
+      POSTGRES_DB: reeduc_db
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - reeduc-network
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - reeduc-network
+    restart: unless-stopped
+
+  web:
+    container_name: django_container
+    image: python:3.12
+    working_dir: /app
+    command: sh -c "pip install --no-cache-dir django psycopg2-binary && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "9000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=reeduc.settings
+      - DATABASE_NAME=reeduc_db
+      - DATABASE_USER=reeduc_user
+      - DATABASE_PASSWORD=123456789
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+    networks:
+      - reeduc-network
+    restart: unless-stopped
+
+networks:
+  reeduc-network:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
