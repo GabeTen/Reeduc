@@ -36,6 +36,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Sair</a>
                         </li>
+                       
 
                     {% else %}
                         <li class="nav-item">
@@ -45,7 +46,12 @@
                             <a class="nav-link" href="{% url 'register' %}">Registrar</a>
                         </li>
                     {% endif %}
-
+                     <li id="theme-toggle-wrapper d-none d-block-none" class="nav-item">
+                        <a href="#" class="nav-link theme-toggle" aria-label="Toggle theme">
+                            <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
+                            <i class="bi bi-sun-fill theme-icon-light"></i>
+                        </a>
+                    </li>
                 </ul>
 
             </div>
@@ -114,7 +120,7 @@
         {% endblock %}
     </div>
 
-    <a href="#" id="position-custom" class="nav-link theme-toggle d-flex justify-content-center" aria-label="Toggle theme">
+    <a href="#" id="position-custom" class="nav-link theme-toggle d-flex justify-content-center d-block d-lg-none" aria-label="Toggle theme">
         <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
         <i class="bi bi-sun-fill theme-icon-light"></i>
     </a>
