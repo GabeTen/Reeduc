@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,25 +118,26 @@ LOGIN_URL = '/login/'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
+# Fuso horário brasileiro
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
+USE_TZ = True
+
 
 USE_L10N = True   # ativa formatação local (datas, números, moedas)
 
-USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/' # onde está a pasta com as imagens
+# Arquivos estáticos
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / "core" / "static",  # onde está a pasta com as imagens
-]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -145,3 +146,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # WhiteNoise - compressão e cache inteligente
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
