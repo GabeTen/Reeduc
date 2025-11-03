@@ -37,23 +37,25 @@ button.select2-selection__clear {
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen
 and (min-width : 320px)
-and (max-width : 400px) {
+and (max-width : 577px) {
 /* Styles */
     #position-custom {
-        position: fixed !important;
-        bottom: 70px !important;
+        position: fixed;
+        bottom: 70px;
         right: 20px !important;
-        padding: 10px !important;
-        border: 1px solid !important;
-        width: 50px !important;
+        padding: 10px;
+        border: 1px solid;
+        width: 50px;  
     }
 }
+
+
 
 #position-custom {
     position: fixed;
     bottom: 70px;
-    right: 80px;
+    right: 20px !important;
     padding: 10px;
     border: 1px solid;
-    width: 50px;
+    width: 50px;  
 }
