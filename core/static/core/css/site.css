@@ -34,6 +34,21 @@ button.select2-selection__clear {
     background-color: #0d6efd;
 }
 
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen
+and (min-width : 320px)
+and (max-width : 400px) {
+/* Styles */
+    #position-custom {
+        position: fixed !important;
+        bottom: 70px !important;
+        right: 20px !important;
+        padding: 10px !important;
+        border: 1px solid !important;
+        width: 50px !important;
+    }
+}
+
 #position-custom {
     position: fixed;
     bottom: 70px;
