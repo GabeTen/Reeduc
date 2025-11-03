@@ -29,3 +29,16 @@ button.select2-selection__clear {
     padding: 1rem !important;
     background-color: #d1d1d1 !important;
 }
+
+#position-custom:hover{
+    background-color: #0d6efd;
+}
+
+#position-custom {
+    position: fixed;
+    bottom: 70px;
+    right: 80px;
+    padding: 10px;
+    border: 1px solid;
+    width: 50px;
+}

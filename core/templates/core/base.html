@@ -34,9 +34,6 @@
                             <a class="nav-link" href="{% url 'publicacoes_list' %}">Publicações Educacionais</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'publicacoes_list' %}">Publicações Educacionais</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Sair</a>
                         </li>
 
@@ -48,13 +45,7 @@
                             <a class="nav-link" href="{% url 'register' %}">Registrar</a>
                         </li>
                     {% endif %}
-                    
-                    <li class="nav-item ms-lg-2">
-                        <a href="#" class="nav-link theme-toggle" aria-label="Toggle theme">
-                            <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
-                            <i class="bi bi-sun-fill theme-icon-light"></i>
-                        </a>
-                    </li>
+
                 </ul>
 
             </div>
@@ -104,13 +95,6 @@
                             </li>
                         {% endif %}
 
-                        <li class="nav-item mt-3">
-                            <a href="#" class="nav-link theme-toggle" aria-label="Toggle theme">
-                                <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
-                                <i class="bi bi-sun-fill theme-icon-light"></i>
-                                <span class="ms-2">Alternar Tema</span>
-                            </a>
-                        </li>
                     </ul>
 
                 </div>
@@ -126,9 +110,19 @@
 
     <div class="container d-flex justify-content-center min-vh-100 py-5">
         {% block content %}
+        
         {% endblock %}
     </div>
+
+    <a href="#" id="position-custom" class="nav-link theme-toggle d-flex justify-content-center" aria-label="Toggle theme">
+        <i class="bi bi-moon-fill theme-icon-dark d-none"></i>
+        <i class="bi bi-sun-fill theme-icon-light"></i>
+    </a>
+   
+
+
     
+     
     <footer class="bg-body-tertiary text-center text-lg-start mt-auto">
         <div class="text-center p-3 text-muted">
             © 2024 Reeduc. Todos os direitos reservados.
