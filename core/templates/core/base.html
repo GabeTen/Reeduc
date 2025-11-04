@@ -24,17 +24,32 @@
             <div class="collapse navbar-collapse justify-content-end ">
                 <ul class="navbar-nav">
                     {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
+                        <li class="nav-item d-flex justify-content-center align-items-center">
+                            
+                            <a class="nav-link d-flex gap-2" href="{% url 'dashboard' %}">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Painel</span>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'course_list' %}">Cursos</a>
+                        <li class="nav-item d-flex justify-content-center align-items-center">
+                            
+                            <a class="nav-link d-flex gap-2" href="{% url 'course_list' %}">
+                                <i class="bi bi-journal-bookmark"></i>
+                                <span>Cursos</span>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'publicacoes_list' %}">Publicações Educacionais</a>
+                        <li class="nav-item d-flex justify-content-center align-items-center">
+                            
+                            <a class="nav-link d-flex gap-2" href="{% url 'publicacoes_list' %}">
+                                <i class="bi bi-book-half"></i>
+                                <span>Publicações</span>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                        <li class="nav-item d-flex justify-content-center align-items-center ">
+                            <a class="nav-link d-flex gap-2" href="{% url 'logout' %}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Sair</span>
+                            </a>
                         </li>
                        
 
@@ -79,17 +94,29 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav">
                         {% if request.user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'dashboard' %}">Painel</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'dashboard' %}">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Painel</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'course_list' %}">Cursos</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'course_list' %}">
+                                    <i class="bi bi-journal-bookmark"></i>
+                                    <span>Cursos</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'publicacoes_list' %}">Publicações Educacionais</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'publicacoes_list' %}">
+                                    <i class="bi bi-book-half"></i>
+                                    <span>Publicações</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Sair</span>
+                                </a>
                             </li>
 
                         {% else %}
