@@ -37,11 +37,18 @@
         </div>
 
         <div class="col-sm-12">
-            <label for="id_publicacoes" class="form-label">Publicações Educacionais</label>
+            <label for="id_publications" class="form-label">Publicações Educacionais</label>
             <select class="form-select" id="id_publicacoes" data-placeholder="Selecione publicações educacionais" multiple>
                 <option></option>
             </select>
-        </div>     
+        </div>    
+        
+        <div class="col-sm-12">
+            <label for="id_estudantes" class="form-label">Estudante (s) a ser (em) matriculado (s)</label>
+            <select class="form-select" id="id_estudantes" data-placeholder="Selecione os estudantes" multiple>
+                <option></option>
+            </select>
+        </div>   
 
         <button type="submit" class="btn btn-primary col-sm-12 ">Salvar Curso</button>
     </form>
@@ -85,6 +92,27 @@
         });
 
 
+        $(function() {
+            $('#id_estudantes').select2({
+                theme: 'bootstrap-5',
+                placeholder: $( this ).data( 'placeholder' ),
+                closeOnSelect: false,
+                allowClear: true,
+                language: "pt-BR",
+                dropdownCssClass: "select2--small",  
+                ajax: {
+                    url: "{% url 'filter_students_by_select2' %}",  // endpoint JSON
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (data) {
+                        return { results: data.results };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+
         $(document).on('submit', '#formCriarCurso', function(e) {
             e.preventDefault();
 
@@ -107,7 +135,7 @@
                     titulo: titulo,
                     descricao: descricao,
                     status: status,
-                    publicacao: publicacoes
+                    publicacoes: publicacoes
                 },
                 success: function(response) {
                     console.log(response)
