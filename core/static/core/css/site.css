@@ -57,5 +57,7 @@ and (max-width : 577px) {
     right: 20px !important;
     padding: 10px;
     border: 1px solid;
-    width: 50px;  
+}
+.logout {
+    cursor: pointer;
 }
