@@ -44,3 +44,17 @@ def logout_view(request):
 def dashboard(request):
     return render(request, 'core/dashboard.html')
 
+
+@login_required
+def filter_students_by_select2(request):
+    
+    termoDeBusca = request.GET.get('q', '')
+
+     # Filtra conforme necessário
+    studentsQuerySet = User.objects.filter(username__icontains=termoDeBusca)
+
+    data = [
+        {'id': s.id, 'text': s.username}
+        for s in studentsQuerySet
+    ]
+    return JsonResponse({'results': data})
