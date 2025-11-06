@@ -7,7 +7,7 @@
     <div class="card shadow-lg border-0">
         <div class="card-body p-4 p-md-5">
             
-            <form method="POST" class="gap-3 d-flex flex-column">
+            <form id="loginForm" class="gap-3 d-flex flex-column">
                 <h2 class="text-primary text-center">Login</h2>
                 {% csrf_token %}
 
@@ -34,4 +34,48 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+<script>
+    $('#loginForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'login' %}",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    toastr.success("Login realizado com sucesso.");
+                    setTimeout( () => {
+                        
+                        window.location.href = response.redirect_url;
+                    },2000)
+
+                } else {
+                    toastr.error("Usuário ou senha incorretos.");
+                }
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                if (response && response.errors) {
+                    // Percorre o dicionário de erros retornado pelo Django
+                    for (const field in response.errors) {
+                        response.errors[field].forEach(msg => {
+                            // Exibe cada erro usando Toastr
+                            toastr.error(msg);
+                        });
+                    }
+                } else {
+                    toastr.error("Erro inesperado ao tentar fazer login.");
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}
