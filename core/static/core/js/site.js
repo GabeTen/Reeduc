@@ -1,3 +1,30 @@
+// ⚡ Configura o Ajax globalmente
+
+const addCSRFTokenInAllPOSTRequests = (csrftoken) => {
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            // Só adiciona o token se não for requisição "segura"
+            if (!(/^GET|HEAD|OPTIONS|TRACE$/i.test(settings.type)) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        error: function(xhr, status, error) {
+            // Tratamento genérico de erro (pode personalizar)
+            if (xhr.status === 403) {
+                toastr.error("Ação não permitida — falha no token CSRF.");
+            } else if (xhr.status >= 500) {
+                toastr.error("Erro interno no servidor.");
+            } else {
+                toastr.error("Erro inesperado ao processar requisição.");
+            }
+        }
+    });
+}
+    
+                    
+
+
+
 //recupera o tema preferido do usuário (light ou dark) do localStorage ou das preferências do sistema
 
 const THEME_KEY = 'theme';

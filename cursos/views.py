@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from educacao.models import PublicacaoEducacional
-from .models import Course
+from educacao.models import PublicacaoEducacional, User
+from .models import Course, Enrollment
 from django.contrib.auth.decorators import login_required
 from .forms import CursoForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -46,7 +46,9 @@ def filter_cursos(request):
 
 @login_required
 def create_curso(request):
-    publicacoesDb = PublicacaoEducacional.objects.filter(curso__isnull=True)
+    publicacoesQuerySet = PublicacaoEducacional.objects.filter(curso__isnull=True)
+    estudantesQuerySet = User.objects.all()
+
 
     if request.method == 'POST':
 
@@ -56,14 +58,21 @@ def create_curso(request):
             curso.autor = request.user
             curso.save()
 
+            publicacoes = request.POST.getlist('publicacoes')  # ← lista de valores
+            estudantes = request.POST.getlist('estudantes')  # ← lista de valores
+
+
             #Associando o curso às Publicacoes Educacionais
-            publicacoes = request.POST.getlist('publicacao')  # ← lista de valores
-
-
             for pub_id in publicacoes:
-                pub = publicacoesDb.get(id=pub_id)
+                pub = publicacoesQuerySet.get(id=pub_id)
                 pub.curso = curso
                 pub.save()
+
+            #Associando o curso aos usuários/estudantes
+            for est_id in estudantes:
+                est = estudantesQuerySet.get(id=est_id)
+                Enrollment.objects.create(course=curso, user=est)
+
 
             return JsonResponse({'mensagem': 'Curso criado com sucesso!'})
 

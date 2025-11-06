@@ -45,11 +45,14 @@ and (max-width : 577px) {
         right: 20px !important;
         padding: 10px;
         border: 1px solid;
-        width: 50px;  
+        width: 50px;
+        z-index: 1000;  
     }
 }
 
-
+#formCriarCurso{
+    max-width: 600px !important;
+}
 
 #position-custom {
     position: fixed;
@@ -57,5 +60,7 @@ and (max-width : 577px) {
     right: 20px !important;
     padding: 10px;
     border: 1px solid;
-    width: 50px;  
+}
+.logout {
+    cursor: pointer;
 }

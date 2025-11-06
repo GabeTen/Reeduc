@@ -26,6 +26,21 @@ class Course(models.Model):
         related_name='cursos'
     )
 
+    # 🔗 Relacionamento com o usuário (N:N)
+    students = models.ManyToManyField(
+        User,
+        through='Enrollment',
+        related_name='courses'
+    )
+
     def __str__(self):
         return self.title
 
+
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} enrolled in {self.course.title}"
