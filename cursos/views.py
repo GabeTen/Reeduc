@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from educacao.models import PublicacaoEducacional, User
-from .models import Course
+from .models import Course, Enrollment
 from django.contrib.auth.decorators import login_required
 from .forms import CursoForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -68,11 +68,10 @@ def create_curso(request):
                 pub.curso = curso
                 pub.save()
 
-            #Associando o curso aos usuários
+            #Associando o curso aos usuários/estudantes
             for est_id in estudantes:
                 est = estudantesQuerySet.get(id=est_id)
-                est.curso = curso
-                
+                Enrollment.objects.create(course=curso, user=est)
 
 
             return JsonResponse({'mensagem': 'Curso criado com sucesso!'})

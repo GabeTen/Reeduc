@@ -120,6 +120,7 @@
             descricao = $('#descricao').val();
             status = $('#status').val();
             publicacoes = $('#id_publicacoes').val();
+            estudantes = $('#id_estudantes').val();
             const csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
 
@@ -135,7 +136,8 @@
                     titulo: titulo,
                     descricao: descricao,
                     status: status,
-                    publicacoes: publicacoes
+                    publicacoes: publicacoes,
+                    estudantes: estudantes
                 },
                 success: function(response) {
                     console.log(response)
