@@ -49,7 +49,9 @@ and (max-width : 577px) {
     }
 }
 
-
+#formCriarCurso{
+    max-width: 600px !important;
+}
 
 #position-custom {
     position: fixed;
