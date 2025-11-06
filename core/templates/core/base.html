@@ -58,11 +58,17 @@
                        
 
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                            <a class="nav-link d-flex gap-2" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Login</span>
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Registrar</a>
+                        <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                            <a class="nav-link d-flex gap-2" href="{% url 'register' %}">
+                                <i class="bi bi-person-plus"></i>
+                                <span>Registrar</span>
+                            </a>
                         </li>
                     {% endif %}
                      <li id="theme-toggle-wrapper d-none d-block-none" class="nav-item">
@@ -124,11 +130,17 @@
                             </li>
 
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'login' %}">
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                    <span>Login</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Registrar</a>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'register' %}">
+                                    <i class="bi bi-person-plus"></i>
+                                    <span>Registrar</span>
+                                </a>
                             </li>
                         {% endif %}
 
@@ -183,11 +195,11 @@
 </body>
 </html>
 
-{%block scripts}
+
     
-    <script>
+<script>
         
-       
+
         $(function(){
 
 
@@ -213,8 +225,7 @@
             })
 
         })
-    </script>
+</script>
 
     
 
-{%endblock}
