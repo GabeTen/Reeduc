@@ -38,7 +38,8 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return JsonResponse({'success': True, 'redirect_url': '/'})
+
 
 @login_required
 def dashboard(request):
