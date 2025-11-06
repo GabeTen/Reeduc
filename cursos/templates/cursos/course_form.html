@@ -15,8 +15,6 @@
     <form id="formCriarCurso" class="card shadow-sm d-flex flex-column gap-3 col-sm-12 p-4">
         <h1 class="text-primary text-center fw-semibold mb-3">Criar novo curso</h1>
 
-        {% csrf_token %}
-
         <div class="col-sm-12">
             <label for="titulo" class="form-label">Título do Curso</label>
             <input type="text" id="titulo" name="titulo" class="form-control">
@@ -113,7 +111,6 @@
             status = $('#status').val();
             publicacoes = $('#id_publicacoes').val();
             estudantes = $('#id_estudantes').val();
-            const csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
 
             $.ajax({
@@ -121,8 +118,7 @@
                 method: 'POST',
                 traditional: true,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', 
-                    'X-CSRFToken': csrftoken 
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 data: {
                     titulo: titulo,

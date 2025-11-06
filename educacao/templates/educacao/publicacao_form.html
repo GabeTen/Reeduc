@@ -19,10 +19,8 @@
         
             <h1 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Criar Nova Publicação</h2>
 
-            <form method="POST" class="gap-4 col-sm-12">
+            <form class="gap-4 col-sm-12">
             
-                {% csrf_token %}
-
                 <div class="d-flex flex-column gap-2 p-0">
                     <div class="col-sm-12 d-flex justify-content-between">
                         {{ form.titulo.label_tag }} 
