@@ -18,10 +18,12 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('dashboard')
-    else:
-        form = UserCreationForm()
-    return render(request, 'core/register.html', {'form': form})
+            return JsonResponse({'success': True, 'redirect_url': '/dashboard/'})
+        else:
+            errors = get_form_errors_as_json(form)
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+    return render(request, 'core/register.html', {'form': UserCreationForm()})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -39,11 +41,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return JsonResponse({'success': True, 'redirect_url': '/'})
-
-
-@login_required
-def dashboard(request):
-    return render(request, 'core/dashboard.html')
 
 
 @login_required

@@ -25,9 +25,13 @@
                     <button type="submit" class="btn btn-primary">Entrar</button>
                 </div>
 
-                <div class="text-center">
-                    <a href="{% url 'register' %}" class="text-primary text-decoration-none">Não tem uma conta? Cadastre-se aqui.</a><br>
-                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">Volte para a home</a>
+                <div class="text-center d-flex flex-column gap-2">
+                    <a href="{% url 'register' %}" class="text-primary text-decoration-none">Não tem uma conta? Clique aqui.</a>
+                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">
+                                                         
+                        <i class="bi bi-house"></i>
+                        Voltar para home
+                    </a>
                 </div>
             </form>
 

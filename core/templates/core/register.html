@@ -4,28 +4,11 @@
 
 {% block content %}
 <div class="col-11 col-md-8 col-lg-6 col-xl-4">
-    
-    {% if form.errors %}
-        <div class="alert alert-warning mb-3" role="alert">
-            <ul class="mb-0">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li><small>{{ error }}</small></li>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                     <li><small>{{ error }}</small></li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-
     <div class="card shadow-lg border-0">
         <div class="card-body p-4 p-md-5">
 
-            <form method="POST" class="gap-3 d-flex flex-column">
-                <h2 class="text-primary text-center">Register</h2>
-                {% csrf_token %}
+            <form id="signupForm" class="gap-3 d-flex flex-column">
+                <h2 class="text-primary text-center">Cadastro</h2>
 
                 <div class="d-flex flex-column gap-2">
                     {{ form.username.label_tag }}
@@ -43,16 +26,61 @@
                 </div>
 
                 <div class="row me-0 ms-0">
-                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </div>
 
-                <div class="text-center">
-                    <a href="{% url 'login' %}" class="text-primary text-decoration-none">Já tem uma conta? Entre aqui.</a><br>
-                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">Volte para a home</a>
+                <div class="text-center d-flex flex-column gap-2">
+                    <a href="{% url 'login' %}" class="text-primary text-decoration-none">Já tem uma conta? Clique aqui.</a>
+                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">
+                                                         
+                        <i class="bi bi-house"></i>
+                        Voltar para home
+                    </a>
                 </div>
             </form>
 
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    $('#signupForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'register' %}",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    toastr.success("Cadastro realizado com sucesso.");
+                    setTimeout( () => {
+                        
+                        window.location.href = response.redirect_url;
+                    },2000)
+
+                } else {
+                    toastr.error(response.message || "Erro ao realizar cadastro. Verifique os campos e tente novamente.");
+                }
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                if (response && response.errors) {
+                    // Percorre o dicionário de erros retornado pelo Django
+                    for (const field in response.errors) {
+                        response.errors[field].forEach(msg => {
+                            // Exibe cada erro usando Toastr
+                            toastr.error(msg);
+                        });
+                    }
+                } else {
+                    toastr.error("Erro no servidor. Tente novamente mais tarde.");
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}
