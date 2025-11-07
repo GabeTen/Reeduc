@@ -56,3 +56,15 @@ def filter_students_by_select2(request):
         for s in studentsQuerySet
     ]
     return JsonResponse({'results': data})
+
+
+@login_required
+def dashboard(request):
+
+    user_logged = request.user
+    total_courses = Course.objects.filter(autor = user_logged).count()
+    total_publications = PublicacaoEducacional.objects.filter(autor = user_logged).count()
+    context = {'total_courses': total_courses, 'total_publications': total_publications}
+
+    return render(request, 'core/dashboard.html', context)
+
