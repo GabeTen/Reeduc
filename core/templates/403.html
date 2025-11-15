@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center py-5" style="min-height: 80vh;">
+  
+  <!-- Ícone -->
+  <div class="mb-4">
+    <i class="bi bi-shield-lock display-1 text-danger"></i>
+  </div>
+
+  <!-- Título -->
+  <h1 class="fw-bold text-danger mb-3">Acesso Negado (403)</h1>
+
+  <!-- Mensagem -->
+  <p class="lead text-muted mb-4" style="max-width: 600px;">
+    {% if request.user.is_authenticated %}
+      Olá, <strong>{{ request.user.username }}</strong>!<br>
+      Você não tem permissão para acessar esta página.<br>
+      Se acredita que isso é um erro, entre em contato com o administrador do sistema.
+    {% else %}
+      Você precisa estar logado para acessar esta página.<br>
+      Faça login e tente novamente.
+    {% endif %}
+  </p>
+
+  <!-- Botões -->
+  <div class="d-flex gap-3">
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">
+        <i class="bi bi-speedometer2"></i> Voltar ao Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn btn-primary">
+        <i class="bi bi-box-arrow-in-right"></i> Ir para Login
+      </a>
+    {% endif %}
+
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+      <i class="bi bi-house-door"></i> Página Inicial
+    </a>
+  </div>
+
+</div>
+{% endblock %}

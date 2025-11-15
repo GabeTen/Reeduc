@@ -1,4 +1,5 @@
 {% load static %}
+{% load permission_tags %}
 <!DOCTYPE html>
 <html lang="pt-br" data-bs-theme="light"> 
 <head>
@@ -37,16 +38,21 @@
                         </li>
                         <li class="nav-item d-flex justify-content-center align-items-center">
                             
-                            <a class="nav-link d-flex gap-2" href="{% url 'course_list' %}">
+                            <a class="nav-link d-flex gap-2" href="{% url 'list_courses' %}">
                                 <i class="bi bi-journal-bookmark"></i>
                                 <span>Cursos</span>
                             </a>
                         </li>
-                        <li class="nav-item d-flex justify-content-center align-items-center">
-                            
-                            <a class="nav-link d-flex gap-2" href="{% url 'publicacoes_list' %}">
+                        <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                            <a class="nav-link d-flex gap-2" href="{% url 'list_publications' %}">
                                 <i class="bi bi-book-half"></i>
                                 <span>Publicações</span>
+                            </a>
+                        </li>
+                        <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                            <a class="nav-link d-flex gap-2" href="{% url 'enrolled' %}">
+                                <i class="bi bi-book-half"></i>
+                                <span>Meus Cursos</span>
                             </a>
                         </li>
                         <li class="nav-item d-flex justify-content-center align-items-center ">
@@ -111,15 +117,21 @@
                                 </a>
                             </li>
                             <li class="nav-item d-flex justify-content-start align-items-center gap-2">
-                                <a class="nav-link d-flex gap-2" href="{% url 'course_list' %}">
+                                <a class="nav-link d-flex gap-2" href="{% url 'list_courses' %}">
                                     <i class="bi bi-journal-bookmark"></i>
                                     <span>Cursos</span>
                                 </a>
                             </li>
                             <li class="nav-item d-flex justify-content-start align-items-center gap-2">
-                                <a class="nav-link d-flex gap-2" href="{% url 'publicacoes_list' %}">
+                                <a class="nav-link d-flex gap-2" href="{% url 'list_publications' %}">
                                     <i class="bi bi-book-half"></i>
                                     <span>Publicações</span>
+                                </a>
+                            </li>
+                            <li class="nav-item d-flex justify-content-start align-items-center gap-2">
+                                <a class="nav-link d-flex gap-2" href="{% url 'enrolled' %}">
+                                    <i class="bi bi-book-half"></i>
+                                    <span>Meus Cursos</span>
                                 </a>
                             </li>
                             <li class="nav-item d-flex justify-content-start align-items-center gap-2">

@@ -1,0 +1,148 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row gap-5 py-5">
+    <div class="d-flex justify-content-between col-sm-12">
+        <div class="d-flex gap-3">
+            <i class="bi bi-book fs-1"></i>
+            <div class="d-flex align-items-center">
+                <h2 class="m-0 fs-3"> Publicações Educacionais</h2>
+            </div>
+        </div>
+        
+        <a href="{% url 'create_publication' %}" class="d-flex align-items-center gap-2 btn-sm btn btn-primary">
+            <span class="d-flex align-items-center">Nova Publicação</span>
+            <i class="bi bi-plus-lg d-flex align-items-center fs-5"></i> 
+        </a>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="row g-3">
+            <div class="col-sm-12 col-md-6">
+                <label for="publication-title" class="form-label">Título da Publicação</label>
+                <input type="text" class="form-control" id="publication-title" placeholder="Título">
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+                <label for="publication-description" class="form-label">Descrição</label>
+                <input class="form-control" id="publication-description" placeholder="Descrição">
+            </div>
+
+            <div class="col-sm-12 d-flex justify-content-end gap-2 mt-3">
+                <button id="clear-filters-publications" class="btn btn-outline-secondary">Limpar Filtros</button>
+                <button id="filter-publications" class="btn btn-primary">Filtrar Publicações</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="publications-content-wrapper">
+        {% include 'education/partials/publications_partial.html' %}
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modal-confirm-deletion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-2">
+                <div class="modal-header">
+                    <div class="d-flex gap-2 align-items-center flex-column">
+                        <h2 class="text-danger">Excluir Publicação</h2>
+                        <p>Tem certeza que deseja excluir <strong id="title-publication"></strong>?</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        ⚠️ Esta ação não poderá ser desfeita.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form id="form-exclude" method="post">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(function () {
+            
+            $('#filter-publications').on('click', function () {
+                const title = $('#publication-title').val();
+                const description = $('#publication-description').val();
+    
+                $.ajax({
+                    url: "{% url 'filter_publications' %}",
+                    method: 'GET',
+                    data: {
+                        title: title,
+                        description: description
+                    },
+                    beforeSend: function () {
+                        $('#publications-content-wrapper').html('<p class="text-muted text-center">Carregando...</p>');
+                    },
+                    success: function (response) {
+                        $('#publications-content-wrapper').html(response);
+                    },
+                    error: function () {
+                        $('#publications-content-wrapper').html('<p class="text-danger text-center">Erro ao filtrar publicações.</p>');
+                    }
+                });
+            });
+    
+            $('#clear-filters-publications').on('click', function () {
+                $('#publication-title').val('');
+                $('#publication-description').val('');
+                $('#filter-publications').click();
+            });
+
+            let publicationId = null;
+            const titleElement = $('#title-publication');
+            const form = $('#form-exclude');
+    
+            $('#modal-confirm-deletion').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                publicationId = button.data('id');
+                const title = button.data('title');
+                titleElement.text(title);
+            });
+    
+            form.on('submit', function (e) {
+                e.preventDefault();
+                if (!publicationId) return;
+
+                $.ajax({
+                    url: "{% url 'delete_publication' 0 %}".replace(0, publicationId),
+                    method: 'POST',
+                    success: function (response) {
+                        
+                        $('#modal-confirm-deletion').modal('hide');
+
+                        if (response.sucess) {
+                            toastr.success(response.message, "✅ Sucesso");
+                            const col = $(`[data-id="${publicationId}"]`).closest('.col-sm-12, .col-md-6, .col-lg-4');
+                            col.fadeOut(400, function() {
+                                $(this).remove();
+                            });
+                            return;
+                            
+                        }
+                        else{
+                            toastr.error(response.message, "🚫 Erro");
+                        }
+
+                        
+
+                    },
+                    error: function () {
+                        toastr.error("Erro ao excluir publicação.", "⚠️ Erro inesperado");
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

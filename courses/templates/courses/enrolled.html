@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4 text-primary">
+    <i class="bi bi-journal-bookmark"></i> Meus Cursos
+  </h2>
+
+  {% if courses %}
+    <div class="row g-4">
+      {% for course in courses %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ course.title }}</h5>
+              <p class="card-text text-muted">{{ course.description|truncatechars:100 }}</p>
+            </div>
+            <div class="card-footer text-end">
+              <a href="{% url 'course_publications' course.id %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye"></i> Ver publicacões educacionais
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-4">
+      <i class="bi bi-info-circle"></i> Você ainda não está matriculado em nenhum curso.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

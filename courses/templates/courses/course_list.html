@@ -1,0 +1,167 @@
+{% extends 'core/base.html' %}
+{% block title %}Cursos - Reeduc{% endblock %}
+
+{% block content %}
+    <div class="row py-5">
+    
+        <div class="d-flex justify-content-between col-sm-12 mb-5">
+            <div class="d-flex gap-3">
+                <i class="bi bi-journal-bookmark fs-1"></i>
+                <div class="d-flex align-items-center">
+                    <h2 class="m-0 fs-3"> Cursos</h2>
+                </div>
+            </div>
+            
+            <a href="{% url 'create_course' %}" class="d-flex align-items-center gap-2 btn-sm btn btn-primary">
+                <span class="d-flex align-items-center">Novo Curso</span>
+                <i class="bi bi-plus-lg d-flex align-items-center fs-5"></i> 
+            </a>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="row g-3">
+                <div class="col-sm-12 col-md-6">
+                    <label for="course-title" class="form-label">Título do Curso</label>
+                    <input type="text" class="form-control" id="course-title" placeholder="Título">
+                </div>
+
+                <div class="col-sm-12 col-md-6">
+                    <label for="course-status" class="form-label">Status</label>
+                    <select id="course-status" class="form-select">
+                        <option selected>Selecione o status.</option>
+                        <option>Ativo</option>
+                        <option>Pendente</option>
+                        <option>Inativo</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-12">
+                    <label for="course-description" class="form-label">Descrição do Curso</label>
+                    <input class="form-control" id="course-description" placeholder="Descrição">
+                </div>
+
+                <div class="col-sm-12 d-flex justify-content-end gap-2 mt-3">
+                    <button id="clear-filters-courses" class="btn btn-outline-secondary">Limpar Filtros</button>
+                    <button id="filter-courses" class="btn btn-primary">Filtrar Cursos</button>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <div id="courses-content-wrapper">
+            {% include 'courses/partials/courses_partial.html' %}
+        </div>
+
+
+        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modal-confirm-deletion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-2">
+                    <div class="modal-header">
+                        <div class="d-flex gap-2 align-items-center flex-column">
+                            <h2 class="text-danger">Excluir Curso</h2>
+                            <p>Tem certeza que deseja excluir <strong id="course-title"></strong>?</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" role="alert">
+                            ⚠️ Esta ação não poderá ser desfeita.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="form-delete" method="post">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(function () {
+            // Clique no botão de filtro
+            $('#filter-courses').on('click', function () {
+                const title = $('#course-title').val();
+                const description = $('#course-description').val();
+                const status = $('#course-status').val();
+
+                $.ajax({
+                    url: '/courses/filter', 
+                    url: "{% url 'filter_publications_by_select2' %}",
+                    method: 'GET',
+                    data: {
+                        title: title,
+                        description: description,
+                        status: status === 'Selecione o status.' ? '' : status
+                    },
+                    beforeSend: function () {
+                        $('#courses-content-wrapper').html('<p class="text-muted">Carregando...</p>');
+                    },
+                    success: function (response) {
+                        $('#courses-content-wrapper').html(response);
+                    },
+                    error: function () {
+                        $('#courses-content-wrapper').html('<p class="text-danger">Erro ao filtrar cursos.</p>');
+                    }
+                });
+            });
+
+            // Clique em "Limpar filtros"
+            $('#clear-filters-courses').on('click', function () {
+                $('#course-title').val('');
+                $('#course-description').val('');
+                $('#course-status').val('Selecione o status.');
+                $('#filter-courses').click(); // 🔹 Recarrega todos os cursos
+            });
+
+            let courseId = null;
+            const titleElement = $('#course-title');
+            const form = $('#form-delete');
+    
+            $('#modal-confirm-deletion').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                courseId = button.data('id');
+                const title = button.data('title');
+                titleElement.text(title);
+            });
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                if (!courseId) return;
+                $.ajax({
+                    url: "{% url 'delete_course' 0 %}".replace("0", courseId),
+                    method: 'POST',
+                    success: function (data) {
+
+                        $('#modal-confirm-deletion').modal('hide');
+
+                        if (data.error) {
+                            toastr.error(data.error, "🚫 Erro");
+                            return;
+                        }
+
+                        const col = $(`[data-id="${courseId}"]`).closest('.col-sm-12, .col-md-6, .col-lg-4');
+                        col.fadeOut(400, function() {
+                            $(this).remove();
+                        });
+
+                        toastr.success(data.message, "✅ Sucesso");
+                    },
+                    error: function () {
+                        toastr.error("Erro ao excluir publicação.", "⚠️ Erro inesperado");
+                    }
+                });
+            });
+
+        });
+
+    </script>
+{% endblock %}

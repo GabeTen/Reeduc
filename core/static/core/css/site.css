@@ -1,4 +1,4 @@
-#id_descricao, #id_titulo, #id_link {
+#id_description, #id_title, #id_link {
     width: 100%;
 }
 #mobileOffcanvasMenu {
@@ -50,7 +50,7 @@ and (max-width : 577px) {
     }
 }
 
-#formCriarCurso{
+#form-course, #form-publication{
     max-width: 600px !important;
 }
 

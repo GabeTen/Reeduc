@@ -1,0 +1,132 @@
+{% extends 'core/base.html' %}
+{% block title %}Nova Publicação{% endblock %}
+
+{% block content %}
+<div class="row gap-5 justify-content-center align-items-center py-5">
+
+  
+    <div class="d-flex justify-content-start">
+        <a href="{% url 'list_publications' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para lista de publicações
+        </a>
+    </div>
+
+
+    <div class="card shadow-sm col-sm-8 col-md-8 align-items-center">
+        <div class="card-body col-sm-12 col-md-10 py-5">
+
+
+            {% if edit %}
+                <h2 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Editar Publicação</h2>
+            {% else %}
+                <h2 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Criar Publicação</h2>
+            {% endif %}
+
+            <form 
+                novalidate
+                id="form-publication" 
+                class="gap-4 col-sm-12"
+                method: "POST"
+                {% if edit and publication.id %}
+                    action="{% url 'edit_publication' publication.id %}"
+                {% else %}
+                    action="{% url 'create_publication' %}"
+                {% endif %}
+                >
+            
+                <div class="d-flex flex-column gap-2 p-0">
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.title.label_tag }} 
+                        <small class="text-muted">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.title }}
+                    </div>
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.link.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.link }}
+                    </div>
+                    
+                </div>
+                
+                <div class="d-flex flex-column gap-2 p-0">
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.description.label_tag }}
+                        <small class="text-muted">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.description }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Enviar</button>
+        
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(function() {
+
+            // Envio do formulário de criação de publicação via AJAX
+            $('#form-publication').on('submit', function(e) {
+                e.preventDefault();
+
+                const form = $(this);
+                
+                const title = $('#id_title').val();
+                const link = $('#id_link').val();
+                const description = $('#id_description').val();
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: "POST",    
+                    data: {
+                        title: title,
+                        link: link,
+                        description: description
+                    },
+                    success: function(response) {
+
+                        if (response.success) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.href = "{% url 'list_publications' %}";
+                            }, 1000);
+                        } else {
+                            toastr.error(response.message ?? 'Erro ao salvar publicação.');
+                        }
+                    },
+                    error: function(xhr) {
+                        
+                        const response = xhr.responseJSON;
+                        
+                        if (response && response.errors) {
+                            // Percorre o dicionário de erros retornado pelo Django
+                            for (const field in response.errors) {
+                                response.errors[field].forEach(msg => {
+                                    //Formatando a saída
+                                    output_formatted = `${field.charAt(0).toUpperCase() + field.slice(1).toLowerCase()} - ${msg}`    
+                                    // Exibe cada erro usando Toastr
+                                    toastr.error(output_formatted);
+                                });
+                            }
+                        } else {
+                            toastr.error("Erro inesperado.");
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
