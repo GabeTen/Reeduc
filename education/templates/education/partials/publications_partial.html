@@ -1,0 +1,70 @@
+{% comment %} This is education/templates/education/partials/publications_partial.html {% endcomment %}
+
+<div id="card-container" class="col-sm-12 d-flex flex-wrap gap-4 d-flex justify-content-center justify-content-xl-start py-5" >
+    {% for p in publications %}
+        <div class="col-sm-12 col-md-6 col-lg-4" style="max-width: 300px;">
+            <div class="card" data-id="{{ p.id }}">
+
+                {% if p.link %}
+                    <div class="ratio ratio-16x9">
+                        <iframe 
+                            src="{{ p.embed_link }}" 
+                            title="{{ p.title }}" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 data-bs-toggle="tooltip" data-bs-title="{{ p.title }}" class="card-title text-truncate" style="max-height: 50px;">{{ p.title }}</h5>
+                    <p data-bs-toggle="tooltip" data-bs-title="{{ p.description }}" class="card-text text-wrap text-truncate" style="max-height: 100px">
+                        {{ p.description }}
+                    </p>
+
+                        {% if p.author == request.user or request.user.is_superuser %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'edit_publication' p.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <a class="btn btn-sm btn-outline-danger btn-delete" data-title="{{ p.title }}" data-id="{{ p.id }}" data-bs-toggle="modal" data-bs-target="#modal-confirm-deletion">Excluir</a>
+                            </div>
+                        {% endif %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Autor: {{ p.author }}</li>
+                    <li class="list-group-item">Data de Publicação: {{ p.publication_date }}</li>
+                </ul>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="text-center fs-5 text-muted">Nenhuma publicação encontrada.</div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Navegação de páginas d-block">
+        <ul class="pagination justify-content-center">
+
+            {% if publicacoes.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ publicacoes.previous_page_number }}">Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+
+            {% for num in publicacoes.paginator.page_range %}
+            <li class="page-item {% if publicacoes.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if publicacoes.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ publicacoes.next_page_number }}">Próxima</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Próxima</span></li>
+            {% endif %}
+
+        </ul>   
+</nav>

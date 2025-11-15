@@ -1,0 +1,235 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row d-flex justify-content-center col-sm-12 mx-1">
+
+  
+    <div class="col-sm-12 mb-3 p-0">
+        <a href="{% url 'list_courses' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para lista de cursos
+        </a>
+    </div>
+
+
+    <div class="card shadow-sm col-sm-8 col-md-8 align-items-center">
+
+        <div class="card-body col-sm-12 col-md-10 py-5">
+            
+            {% if edit %}
+                <h2 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Editar Curso</h2>
+            {% else %}
+                <h2 class="col-sm-12 col-md-12 text-primary text-center fw-semibold mb-5">Criar Curso</h2>
+            {% endif %}
+
+            <form novalidate 
+                id="form-course" 
+                class="d-flex flex-column gap-3 col-sm-12 p-4"
+                method="post"
+                {% if edit and course.id %}
+                    action="{% url 'edit_course' course.id %}",
+                {% else %}
+                    action="{% url 'create_course' %}",
+                {% endif %}
+                >
+
+                <div class="d-flex flex-column gap-2 p-0">
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.title.label_tag }} 
+                        <small class="text-muted">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.title }}
+                    </div>
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.description.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.description }}
+                    </div>
+                    
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.status.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.status }}
+                    </div>
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.publications.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.publications }}
+                    </div>
+
+                    <div class="col-sm-12 d-flex justify-content-between">
+                        {{ form.students.label_tag }}
+                        <small class="text-muted ">(Campo obrigatório)</small>
+                    </div>
+                    <div class="col-sm-12">
+                        {{ form.students }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary col-sm-12 ">Enviar</button>
+            </form>
+        </div>    
+    </div>   
+
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+
+    <!-- Recuperar as publicacoes educacionais, estudantes e popular o dropdown na renderizacao da pagina -->
+    <script>
+        //popular o select de publicacoes educacionais inicialmente
+        $(function() {
+            $('#id_publications').select2({
+                theme: 'bootstrap-5',
+                placeholder: $( this ).data( 'placeholder' ),
+                closeOnSelect: false,
+                allowClear: true,
+                language: "pt-BR",
+                dropdownCssClass: "select2--small",  
+                ajax: {
+                    url: "{% url 'filter_publications_by_select2' %}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            curso: "{{ course.id|default:'' }}"       // 👈 send course ID dynamically
+                        };
+                    },
+                    processResults: function (data) {
+                        return { results: data.results };
+                    }
+                }
+            });
+        });
+
+        //popular o select de estudantes inicialmente
+        $(function() {
+            $('#id_students').select2({
+                theme: 'bootstrap-5',
+                placeholder: $( this ).data( 'placeholder' ),
+                closeOnSelect: false,
+                allowClear: true,
+                language: "pt-BR",
+                dropdownCssClass: "select2--small",  
+                ajax: {
+                    url: "{% url 'filter_students_by_select2' %}",  // endpoint JSON
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (data) {
+                        return { results: data.results };
+                    }
+                }
+            });
+        });
+
+        $('#id_publications, #id_students').on('select2:unselect', function () {
+            // Recarrega o dropdown (faz nova requisição)
+            const select = $(this);
+             setTimeout(() => {
+                select.select2('close').select2('open');
+            }, 150);
+        });
+
+        $(document).on('submit', '#form-course', function(e) {
+            e.preventDefault();
+
+            const form = $('#form-course');
+            title = $('#id_title').val();
+            description = $('#id_description').val();
+            status = $('#id_status').val();
+            publications = $('#id_publications').val();
+            students = $('#id_students').val();
+
+
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                traditional: true,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                data: {
+                    title: title,
+                    description: description,
+                    status: status,
+                    publications: publications,
+                    students: students
+                },
+                success: function(response) {
+                    if (response.success) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.href = "{% url 'list_courses' %}";
+                            }, 1000);
+                    } else {
+                        toastr.error(response.message ?? 'Erro ao salvar curso.');
+                    } 
+                },
+                error: function(xhr) {
+                    const response = xhr.responseJSON;
+                    if (response && response.errors) {
+                        // Percorre o dicionário de erros retornado pelo Django
+                        for (const field in response.errors) {
+                            
+                            response.errors[field].forEach(msg => {
+                                    //Formatando a saída
+                                    output_formatted = `${field.charAt(0).toUpperCase() + field.slice(1).toLowerCase()} - ${msg}`    
+                                    // Exibe cada erro usando Toastr
+                                    toastr.error(output_formatted);
+                                });
+                            
+                        }
+                    } else {
+                        toastr.error("Erro inesperado.");
+                    }
+                }
+            });
+
+        });
+
+
+        // Usado exclusivamente para a tela de edição de curso
+        
+        $(function () {
+            const courseId = "{{ course.id|default:'' }}";  // só existe em modo edição
+
+            if (courseId) {
+                // 1️⃣ Buscar publicações e estudantes vinculados via AJAX
+                $.ajax({
+                    url: `/courses/${courseId}/relationships`, // endpoint que você cria                    
+                    type: 'GET',
+                    success: function (data) {
+                        // Limpando o select2 de publicacoes educacionais para não conter valores duplicados
+                        $('#id_publications').empty().trigger('change');
+                        // 2️⃣ Publicações
+                        data.publications.forEach(function (pub) {
+                            const option = new Option(pub.text, pub.id, true, true);
+                            $('#id_publications').append(option).trigger('change');
+                        });
+                        // Limpando o select2 de publicacoes educacionais para não conter valores duplicados
+                        $('#id_students').empty().trigger('change');
+                        // 3️⃣ Estudantes
+                        data.students.forEach(function (stu) {
+                            const option = new Option(stu.text, stu.id, true, true);
+                            $('#id_students').append(option).trigger('change');
+                        });
+                    }
+                });
+            }
+        });
+      
+
+    </script>
+{% endblock %}
+

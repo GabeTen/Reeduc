@@ -1,0 +1,85 @@
+{% comment %} This is courses/templates/courses/partials/courses_partial.html {% endcomment %}
+{% load permission_tags %}
+
+<div id="card-container" class="col-sm-12 d-flex flex-wrap gap-4 justify-content-center justify-content-xl-start py-5">
+
+    {% for c in courses %}
+        <div class="col-sm-12 col-md-6 col-lg-4" style="max-width: 300px;">
+            <div class="card h-100 shadow-sm" data-id="{{ c.id }}">
+
+                
+                <div class="card-body">
+                    
+                    <h5 data-bs-toggle="tooltip" title="{{ c.title }}" class="card-title text-truncate" style="max-height: 50px;">{{ c.title }}</h5>
+                    {% if c.description %}
+                        <p data-bs-toggle="tooltip" title="{{ c.description }}" class="card-text text-wrap text-truncate text-muted" style="max-height: 100px;">
+                            {{ c.description }}
+                        </p>
+                    {% endif %}
+
+                </div>
+                <ul class="list-group list-group-flush mt-auto">
+                    <li class="list-group-item">
+                        <i class="bi bi-person-fill"></i> Autor: {{ c.author }}
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-calendar3"></i> Criado em: {{ c.publication_date|date:"d/m/Y" }}
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-people-fill"></i> Status: {{ c.status }}
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-people-fill"></i> Nº de alunos matriculados: {{ c.total_enrolled }}
+                    </li>
+                    {% if c.author == request.user or request.user.is_superuser %}
+                        <li class="list-group-item">
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'edit_course' c.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <a class="btn btn-sm btn-outline-danger btn-delete" data-title="{{ c.title }}" data-id="{{ c.id }}" data-bs-toggle="modal" data-bs-target="#modal-confirm-deletion">
+                                    <i class="bi bi-trash"></i> 
+                                    Excluir
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>   
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="text-center fs-5 text-muted py-5"> Nenhum curso encontrado.</div>
+    {% endfor %}
+</div>
+
+{% if courses.paginator %}
+<nav aria-label="Navegação de páginas" class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% if courses.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ courses.previous_page_number }}">Anterior</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Anterior</span>
+            </li>
+        {% endif %}
+
+        {% for num in courses.paginator.page_range %}
+            <li class="page-item {% if courses.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if courses.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ courses.next_page_number }}">Próxima</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Próxima</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
