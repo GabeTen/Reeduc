@@ -7,6 +7,7 @@ python-decouple==3.8
 sqlparse==0.5.3
 tzdata==2025.2
 whitenoise==6.11.0
-django-role-permissions==3.4.0
+django-role-permissions==3.2.0
+
 
 
