@@ -1,0 +1,191 @@
+{% extends 'core/base.html' %}
+{% block title %}Painel Administrativo - Reeduc{% endblock %}
+{% block content %}
+    <div class="w-100 p-4 rounded-3">
+        <table id="usersTable" class="table table-bordered table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>Ultimo Login</th>
+                    <th>Super Usuario</th>
+                    <th>Nome do usuario</th>
+                    <th>Primeiro Nome</th>
+                    <th>Ultimo Nome</th>
+                    <th>Email</th>
+                    <th>Staff</th>
+                    <th>Ativo</th>
+                    <th>Juntou-se as</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="modal fade" id="editRoleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Papel do Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="userId">
+
+                    <label class="form-label">Selecione o Papel</label>
+                    <select id="roleSelect" class="form-select">
+                        <option value="aluno">Aluno</option>
+                        <option value="professor">Professor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btnSalvarRole" class="btn btn-primary">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $(function () {
+
+        let table = $('#usersTable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: false,   // ❌ DESATIVA o modo responsivo que esconde colunas
+            scrollX: true,       // ✅ ATIVA SCROLL HORIZONTAL
+            autoWidth: false,
+            searching: true,
+            ajax: {
+                url: "{% url 'users_data' %}",
+                type: "GET"
+            },
+
+            columns: [
+                {
+                    data: "last_login",
+                    orderable: false, 
+                },
+                { 
+                    data: "is_superuser",
+                    orderable: false, 
+                },
+                { 
+                    data: "username",
+                    orderable: false,
+                },
+                { 
+                    data: "first_name",
+                    orderable: false,
+                },
+                { 
+                    data: "last_name",
+                    orderable: false, 
+                },
+                { 
+                    data: "email",
+                    orderable: false,
+                },
+                { 
+                    data: "is_staff",
+                    orderable: false,
+                },
+                { 
+                    data: "is_active",
+                    orderable: false, 
+                },
+                { 
+                    data: "date_joined",
+                    orderable: false, 
+                },
+                {
+                    data: "role",
+                    orderable: false,
+                    render: function (role) {
+                        if (role === "admin")
+                            return `<span class="badge bg-danger">Admin</span>`;
+                        if (role === "professor")
+                            return `<span class="badge bg-primary">Professor</span>`;
+                        return `<span class="badge bg-secondary">Aluno</span>`;
+                    }
+                },
+                // 🔧 COLUNA DE AÇÕES (editar papel)
+                {
+                    data: "id",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <button class="btn btn-sm btn-outline-primary edit-role-btn"
+                                    data-id="${row.id}"
+                                    data-role="${row.role}"
+                                    title="Editar papel do usuário">
+                                <i class="bi bi-person-gear"></i>
+                            </button>
+                        `;
+                    }
+                }
+            ],
+            pagingType: 'full_numbers',
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json"
+            }
+        });
+
+    });
+</script>
+
+<script>
+
+    $(document).on("click", ".edit-role-btn", function () {
+        const userId = $(this).data("id");
+
+        // Coloca o ID do usuário no input hidden do modal
+        $("#userId").val(userId);
+
+        // Abre o modal
+        const modal = new bootstrap.Modal(document.getElementById("editRoleModal"));
+        modal.show();
+});
+</script>
+
+
+<script>
+        $(document).on("click", "#btnSalvarRole", function () {
+
+            const userId = $("#userId").val();
+            const role = $("#roleSelect").val();
+            let url = "{% url 'edit_role_user' 0 %}".replace("0", userId);
+
+
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: {
+                    role: role
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+
+                    // Fecha modal
+                    const modalElement = document.getElementById("editRoleModal");
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    modal.hide();
+
+                    // Atualiza tabela
+                    $('#usersTable').DataTable().ajax.reload(null, false);
+                },
+                error: function (xhr) {
+                    const msg = xhr.responseJSON?.error || "Erro ao atualizar papel.";
+                    toastr.error(msg);
+                }
+            });
+
+    });
+</script>
+{% endblock %}
