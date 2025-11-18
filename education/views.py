@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rolepermissions.decorators import has_role_decorator
 
 @login_required
+@has_role_decorator('professor')
 def list_publications(request):
     all_publications = EducationalPublication.objects.all().order_by('-publication_date')
 

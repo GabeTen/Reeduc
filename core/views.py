@@ -41,7 +41,7 @@ def login_view(request):
             errors = get_form_errors_as_json(form)
             return JsonResponse({'success': False, 'errors': errors}, status=400)
 
-    return render(request, 'core/login.html', {'form': AuthenticationForm(request)})
+    return render(request, 'core/login.html', {'form': AuthenticationForm()})
 
 @login_required
 def logout_view(request):

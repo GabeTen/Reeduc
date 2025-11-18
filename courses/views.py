@@ -276,6 +276,7 @@ def enrolled(request):
     return render(request, 'courses/enrolled.html', context)
 
 @login_required
+@has_role_decorator('professor')
 def get_relationships_course(request, id):
     
     course = Course.objects.get(id=id)

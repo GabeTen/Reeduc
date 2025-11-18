@@ -64,3 +64,8 @@ and (max-width : 577px) {
 .logout {
     cursor: pointer;
 }
+
+
+.container-enrolled {
+    min-height: 800px;
+}
