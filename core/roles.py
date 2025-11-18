@@ -41,6 +41,8 @@ class Professor(AbstractUserRole):
         'create_course': True,
         'edit_own_course': True,
         'view_own_courses': True,
+        'view_available_courses': True,
+        'enroll_course': True,
 
         # Publicações educacionais
         'create_publication': True,
@@ -60,10 +62,9 @@ class Aluno(AbstractUserRole):
         'view_dashboard': True,
 
         # Cursos
-        'view_available_courses': True,
-        'enroll_course': True,
         'view_enrolled_courses': True,
 
         # Publicações educacionais
         'view_publications': True,
+        
     }
