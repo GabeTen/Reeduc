@@ -8,6 +8,7 @@
         <div class="card-body p-4 p-md-5">
             
             <form id="loginForm" class="gap-3 d-flex flex-column">
+                
                 <h2 class="text-primary text-center">Login</h2>
 
                 <div class="d-flex flex-column gap-2">
@@ -50,6 +51,7 @@
         $.ajax({
             url: "{% url 'login' %}",
             type: "POST",
+
             data: $(this).serialize(),
             success: function(response) {
                 if (response.success) {
@@ -57,7 +59,7 @@
                     setTimeout( () => {
                         
                         window.location.href = response.redirect_url;
-                    },2000)
+                    },1000)
 
                 } else {
                     toastr.error("Usuário ou senha incorretos.");

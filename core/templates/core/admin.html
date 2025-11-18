@@ -1,53 +1,150 @@
 {% extends 'core/base.html' %}
-{% block title %}Painel Administrativo - Reeduc{% endblock %}
+{% block title %}Área Administrativo - Reeduc{% endblock %}
 {% block content %}
-    <div class="w-100 p-4 rounded-3">
-        <table id="usersTable" class="table table-bordered table-striped table-responsive">
-            <thead>
-                <tr>
-                    <th>Ultimo Login</th>
-                    <th>Super Usuario</th>
-                    <th>Nome do usuario</th>
-                    <th>Primeiro Nome</th>
-                    <th>Ultimo Nome</th>
-                    <th>Email</th>
-                    <th>Staff</th>
-                    <th>Ativo</th>
-                    <th>Juntou-se as</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-        </table>
-    </div>
 
-    <div class="modal fade" id="editRoleModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
+<div class="w-100 p-4 rounded-3">
 
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Papel do Usuário</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <input type="hidden" id="userId">
-
-                    <label class="form-label">Selecione o Papel</label>
-                    <select id="roleSelect" class="form-select">
-                        <option value="aluno">Aluno</option>
-                        <option value="professor">Professor</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" id="btnSalvarRole" class="btn btn-primary">Salvar</button>
-                </div>
-
+    <div class="d-flex justify-content-between col-sm-12 mb-5">
+        <div class="d-flex gap-3">
+            <i class="bi bi-gear fs-1"></i>
+            <div class="d-flex align-items-center">
+                <h2 class="m-0 fs-3"> Área Administrativa</h2>
             </div>
         </div>
+        
+        <a href="{% url 'register' %}" class="d-flex align-items-center gap-2 btn-sm btn btn-primary">
+            <span class="d-flex align-items-center">Novo usuário</span>
+            <i class="bi bi-person-plus d-flex align-items-center fs-5"></i> 
+        </a>
     </div>
+
+    <table id="usersTable" class="table table-bordered table-striped table-responsive">
+        <thead>
+            <tr>
+                <th>Ultimo Login</th>
+                <th>Super Usuario</th>
+                <th>Nome do usuario</th>
+                <th>Primeiro Nome</th>
+                <th>Ultimo Nome</th>
+                <th>Email</th>
+                <th>Staff</th>
+                <th>Ativo</th>
+                <th>Juntou-se as</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div class="modal fade" id="edit-user-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body gap-2 d-flex flex-column">
+
+                <form id="edit-user-form" novalidate class="d-flex flex-column gap-2" >
+
+                    <input type="hidden" id="user-id">
+
+                    <div class="row g-2">
+                        <div class="col-sm-12 col-md-6">
+                            <label class="form-label" for="firstname">Primeiro Nome</label>
+                            <input id="firstname" type="text" class="form-control" placeholder="Primeiro nome" aria-label="Primeiro nome">
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="form-label" for="lastname">Último nome</label>
+                            <input id="lastname" type="text" class="form-control" placeholder="Último nome" aria-label="Último nome">
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-sm-12 col-md-6">
+                            <label class="form-label" for="email">Email</label>
+                            <input id="email" type="text" class="form-control" placeholder="Email" aria-label="Email">
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="form-label" for="username">Nome do usuário</label>
+                            <input id="username" type="text" class="form-control" placeholder="Nome do usuário" aria-label="Nome do usuário">
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-sm-12">
+                            <label class="form-label" for="password">Senha</label>
+                            <input id="password" type="password" class="form-control" placeholder="Senha" aria-label="Senha">
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="form-check form-switch col-4 d-flex justify-content-center gap-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_superuser">
+                            <label class="form-check-label" for="is_superuser">Super usuário</label>
+                        </div>
+                        <div class="form-check form-switch col-4 d-flex justify-content-center gap-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_staff">
+                            <label class="form-check-label" for="is_staff">Staff</label>
+                        </div>
+                        <div class="form-check form-switch col-4 d-flex justify-content-center gap-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_active">
+                            <label class="form-check-label" for="is_active">Ativo</label>
+                        </div>
+                    </div>
+                    <div class="row g-2"></div>
+                        <label class="form-label">Selecione o Papel</label>
+                        <select id="role-select" class="form-select">
+                            <option value="aluno">Aluno</option>
+                            <option value="professor">Professor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-save-user" class="btn btn-primary">Salvar</button>
+                    </div>
+
+                </form>
+                
+            </div>
+
+            
+
+        </div>
+    </div>
+</div>
+
+
+        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modal-confirm-deletion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-2">
+                    <div class="modal-header">
+                        <div class="d-flex gap-2 align-items-start flex-column">
+                            <h2 class="text-danger">Excluir Usuário</h2>
+                            <p>Tem certeza que deseja excluir o usuário <strong id="modal-username"></strong>?</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" role="alert">
+                            ⚠️ Esta ação não poderá ser desfeita.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="form-delete" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="confirm-delete-user">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 {% endblock %}
 
 
@@ -58,8 +155,8 @@
         let table = $('#usersTable').DataTable({
             processing: true,
             serverSide: true,
-            responsive: false,   // ❌ DESATIVA o modo responsivo que esconde colunas
-            scrollX: true,       // ✅ ATIVA SCROLL HORIZONTAL
+            responsive: false,   
+            scrollX: true,       
             autoWidth: false,
             searching: true,
             ajax: {
@@ -121,71 +218,227 @@
                     orderable: false,
                     render: function (data, type, row) {
                         return `
-                            <button class="btn btn-sm btn-outline-primary edit-role-btn"
+                            <button class="btn btn-sm btn-outline-primary edit-user-btn"
                                     data-id="${row.id}"
-                                    data-role="${row.role}"
-                                    title="Editar papel do usuário">
+                                    title="Editar usuário">
                                 <i class="bi bi-person-gear"></i>
                             </button>
                         `;
                     }
-                }
+                },
+                {
+                    data: "id",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <button class="btn btn-sm btn-outline-danger delete-user-btn"
+                                    data-id="${row.id}"
+                                    data-id="${row.username}"
+                                    title="Deletar usuário">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        `;
+                    }
+                },
+
             ],
             pagingType: 'full_numbers',
             language: {
-                url: "//cdn.datatables.net/plug-ins/1.13.1/i18n/pt-BR.json"
+                url: "https://cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
             }
         });
 
     });
 </script>
 
-<script>
-
-    $(document).on("click", ".edit-role-btn", function () {
-        const userId = $(this).data("id");
-
-        // Coloca o ID do usuário no input hidden do modal
-        $("#userId").val(userId);
-
-        // Abre o modal
-        const modal = new bootstrap.Modal(document.getElementById("editRoleModal"));
-        modal.show();
-});
-</script>
-
 
 <script>
-        $(document).on("click", "#btnSalvarRole", function () {
 
-            const userId = $("#userId").val();
-            const role = $("#roleSelect").val();
-            let url = "{% url 'edit_role_user' 0 %}".replace("0", userId);
+//Recuperar os dados do usuario e popular o modal de edicao
+  $(document).on("click", ".edit-user-btn", function () {
 
+    const userId = $(this).data("id");
 
-            $.ajax({
-                url: url,
-                method: "POST",
-                data: {
-                    role: role
-                },
-                success: function (response) {
-                    toastr.success(response.message);
+    const url = `/users/${userId}/get/`;
 
-                    // Fecha modal
-                    const modalElement = document.getElementById("editRoleModal");
-                    const modal = bootstrap.Modal.getInstance(modalElement);
-                    modal.hide();
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: function (response) {
 
-                    // Atualiza tabela
-                    $('#usersTable').DataTable().ajax.reload(null, false);
-                },
-                error: function (xhr) {
-                    const msg = xhr.responseJSON?.error || "Erro ao atualizar papel.";
-                    toastr.error(msg);
-                }
-            });
+            if (!response.success) {
+                toastr.error("Erro ao carregar dados do usuário.");
+                return;
+            }
 
+            // Preenche o modal
+            $("#user-id").val(response.id);
+            $("#firstname").val(response.first_name);
+            $("#lastname").val(response.last_name);
+            $("#email").val(response.email);
+            $("#username").val(response.username);
+
+            $("#is_superuser").prop("checked", response.is_superuser);
+            $("#is_staff").prop("checked", response.is_staff);
+            $("#is_active").prop("checked", response.is_active);
+
+            $("#role-select").val(response.role).change();
+
+            // Abre o modal
+            $("#edit-user-modal").modal("show");
+        },
+        error: function () {
+            toastr.error("Erro ao buscar usuário.");
+        }
     });
+});
+  
 </script>
+
+
+
+<script>
+    $(document).on("submit", "#edit-user-form", function (e) {
+        e.preventDefault();
+
+        const userId     = $("#user-id").val().trim();
+        const role        = $("#role-select").val() || "aluno";
+        const username    = $("#username").val().trim();
+        const firstname   = $("#firstname").val().trim();
+        const lastname    = $("#lastname").val().trim();
+        const password    = $("#password").val().trim();
+        const email       = $("#email").val().trim();
+        const isSuperUser = $("#is_superuser").is(":checked");
+        const isStaff     = $("#is_staff").is(":checked");
+        const isActive    = $("#is_active").is(":checked");
+
+        const url = "{% url 'edit_data_user' 0 %}".replace("0", userId);
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                role: role,
+                username: username,
+                firstname: firstname,
+                lastname: lastname,
+                password: password,
+                email: email,
+                is_superuser: isSuperUser.toString(),
+                is_staff: isStaff.toString(),
+                is_active: isActive.toString(),
+            },
+            success: function (response) {
+
+                // Backend informa que NÃO houve mudanças
+                if (response.changed === false) {
+                    toastr.warning(response.message);
+                    return;
+                }
+
+                // Sucesso
+                if (response.success) {
+                    toastr.success(response.message)
+                    
+
+                }
+
+                // Atualizar tabela
+                $('#usersTable').DataTable().ajax.reload(null, false);
+                // Fechar modal
+                $("#edit-user-modal").modal("hide");
+
+                
+            },
+            error: function (xhr) {
+                const msg = xhr.responseJSON.message || "Erro ao atualizar dados do usuário.";
+                toastr.error(msg);
+            }
+        });
+
+
+           
+    });
+
+
+</script>
+
+<script>
+     $('#edit-user-modal').on('hidden.bs.modal', function () {
+            // Limpa todos os campos do formulário
+            $('#edit-user-form')[0].reset();
+
+            // Remove mensagens antigas
+            toastr.clear();
+        });
+</script>
+
+<script>
+    // Essa funcao é disparada toda que vez o janela/window for redimensionada
+    //para ajustar a tabela
+    let resizeTimer;
+
+    $(window).on('resize', function () {
+        clearTimeout(resizeTimer);
+
+        resizeTimer = setTimeout(function () {
+            $('#usersTable').DataTable().ajax.reload(null, false);
+        }, 400);
+    });
+
+</script>
+
+
+<script>
+
+    let userIdToDelete = null;
+
+    $(document).on("click", ".delete-user-btn", function () {
+        userIdToDelete = $(this).data("id");
+        userUsernameToDelete = $(this).data("username");
+
+        $("#modal-username").text(userUsernameToDelete)
+        $("#modal-confirm-deletion").modal("show");
+    });
+
+    $(document).on("click", "#confirm-delete-user", function () {
+
+        const url = `/users/${userIdToDelete}/delete/`;
+        const csrfToken = $('#form-delete input[name="csrfmiddlewaretoken"]').val();
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                csrfmiddlewaretoken: csrfToken
+            },
+            success: function (response) {
+
+                if (!response.success) {
+                    toastr.warning(response.error);
+                    return;
+                }
+
+                toastr.success(response.message);
+
+                // Fecha modal
+                $("#modal-confirm-deletion").modal("hide");
+
+                // Atualiza tabela
+                $('#usersTable').DataTable().ajax.reload(null, false);
+            },
+            error: function (xhr) {
+
+                const msg =
+                    xhr.responseJSON?.error ||
+                    "Erro ao excluir usuário.";
+
+                toastr.error(msg);
+            }
+        });
+    });
+
+</script>
+
+
 {% endblock %}

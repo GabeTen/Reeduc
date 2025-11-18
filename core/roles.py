@@ -4,6 +4,7 @@ from rolepermissions.roles import AbstractUserRole
 # ADMINISTRADOR
 # ----------------------------
 class Admin(AbstractUserRole):
+    role_name = 'admin'
     available_permissions = {
         # Acesso geral
         'view_dashboard': True,
@@ -31,6 +32,7 @@ class Admin(AbstractUserRole):
 # PROFESSOR
 # ----------------------------
 class Professor(AbstractUserRole):
+    role_name = 'professor'
     available_permissions = {
         # Acesso básico
         'view_dashboard': True,
@@ -52,6 +54,7 @@ class Professor(AbstractUserRole):
 # ALUNO
 # ----------------------------
 class Aluno(AbstractUserRole):
+    role_name = 'aluno'
     available_permissions = {
         # Acesso básico
         'view_dashboard': True,

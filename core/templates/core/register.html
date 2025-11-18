@@ -59,7 +59,7 @@
                     setTimeout( () => {
                         
                         window.location.href = response.redirect_url;
-                    },2000)
+                    },1000)
 
                 } else {
                     toastr.error(response.message || "Erro ao realizar cadastro. Verifique os campos e tente novamente.");
